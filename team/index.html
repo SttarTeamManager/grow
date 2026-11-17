@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Team overview · Grow with Sttar</title>
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#F7F1EA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cpath d='M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z' fill='%23121212'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/grow.css">
+<style>
+  h1{text-align:left;font-size:clamp(34px,7vw,48px);margin-top:36px}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  @media (min-width:720px){.tiles{grid-template-columns:repeat(6,1fr)}}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+  .bar input{flex:1;min-width:180px;height:42px}
+  .bar .at span{height:42px}
+</style>
+</head>
+<body>
+<main class="wrap wide">
+  <a class="brand" href="/" aria-label="Sttar: Social Archive">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><path fill="#121212" d="M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z"/></svg>
+    <span>Sttar: Social Archive</span>
+  </a>
+
+  <section id="gate" hidden>
+    <h1>Team overview</h1>
+    <form class="card" id="keyform" style="margin-top:20px;max-width:420px">
+      <label for="key">Team key</label>
+      <input id="key" type="text" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <button class="btn" type="submit" style="margin-top:12px">open</button>
+      <p class="msg err" id="keymsg"></p>
+    </form>
+  </section>
+
+  <section id="page" hidden>
+    <h1>Creators</h1>
+    <p class="muted" style="margin:8px 0 0">Updated <span id="updated">…</span>. Refreshes on its own every hour.</p>
+
+    <div class="tiles">
+      <div class="tile"><div class="n" id="t1">–</div><div class="l">creators</div></div>
+      <div class="tile"><div class="n" id="t0">–</div><div class="l">link visits</div></div>
+      <div class="tile"><div class="n" id="t2">–</div><div class="l">friends joined</div></div>
+      <div class="tile"><div class="n" id="t3">–</div><div class="l">in progress</div></div>
+      <div class="tile"><div class="n" id="t4">–</div><div class="l">qualified</div></div>
+      <div class="tile"><div class="n" id="t5">–</div><div class="l">owed now</div></div>
+    </div>
+
+    <div class="bar">
+      <div class="at" style="flex:1;min-width:200px"><span>@</span><input id="add" type="text" placeholder="add a creator by username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+      <button class="btn sm" id="addbtn" type="button">add</button>
+      <button class="btn sm ghost" id="refresh" type="button">refresh now</button>
+      <a class="btn sm ghost" id="sheet" target="_blank" rel="noopener">open sheet</a>
+    </div>
+    <p class="msg" id="barmsg"></p>
+
+    <div class="card scroll" style="padding:6px 10px;margin-top:6px">
+      <table>
+        <thead><tr><th>creator</th><th>visits</th><th>joined</th><th>in progress</th><th>qualified</th><th>this month</th><th>earned</th><th>paid</th><th>owed</th><th>pay to</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="small muted" style="margin-top:14px">Tap a creator to see their friends. After you send someone their money, open their row and tap "mark paid" (it logs to the Payouts tab in the sheet). Rates, the monthly cap and pausing sign-ups are in the Config tab.</p>
+  </section>
+</main>
+
+<script src="/assets/grow.js"></script>
+<script>
+(function () {
+  var G = window.GROW, $ = function (id) { return document.getElementById(id); };
+  var k = new URLSearchParams(location.search).get("k") || G.load("grow_team") || "";
+
+  $("keyform").addEventListener("submit", function (e) { e.preventDefault(); k = $("key").value.trim(); load(); });
+
+  function load() {
+    if (!k) { $("gate").hidden = false; return; }
+    G.get({ a: "team", k: k }).then(function (d) {
+      if (!d || !d.ok) { G.forget("grow_team"); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "Couldn't open."; return; }
+      G.save("grow_team", k);
+      $("gate").hidden = true; $("page").hidden = false;
+      render(d);
+    }).catch(function () { $("gate").hidden = false; $("keymsg").textContent = "Couldn't connect. Reload to try again."; });
+  }
+
+  function render(d) {
+    var p = d.program, sum = function (key) { return d.creators.reduce(function (t, c) { return t + (c[key] || 0); }, 0); };
+    $("updated").textContent = G.ago(d.updated);
+    $("t1").textContent = d.creators.length; $("t0").textContent = sum("visits"); $("t2").textContent = sum("signups"); $("t3").textContent = sum("in_progress");
+    $("t4").textContent = sum("qualified"); $("t5").textContent = G.money(sum("owed"));
+    if (d.sheet) $("sheet").href = d.sheet; else $("sheet").hidden = true;
+
+    var body = $("rows"); body.textContent = "";
+    if (!d.creators.length) {
+      var tr = G.el("tr"), td = G.el("td", "muted", "No creators yet. Share grow.sttar.com or add one above.");
+      td.colSpan = 10; td.style.textAlign = "left"; tr.appendChild(td); body.appendChild(tr);
+    }
+    d.creators.sort(function (a, b) { return b.qualified - a.qualified || b.signups - a.signups || b.joined - a.joined; }).forEach(function (c) {
+      var tr = G.el("tr", "c");
+      [ "@" + c.username, c.visits || 0, c.signups, c.in_progress, c.qualified, G.money(c.earned_this_month), G.money(c.earned), G.money(c.paid), G.money(c.owed), c.payout || "–" ]
+        .forEach(function (v) { tr.appendChild(G.el("td", "", v)); });
+      var det = G.el("tr", "d"), cell = G.el("td"); cell.colSpan = 10; det.hidden = true; det.appendChild(cell);
+      var meta = G.el("div", "small muted", "Joined " + new Date(c.joined).toLocaleDateString() + " · " + (c.added_by === "team" ? "added by team" : "signed up") + " · ");
+      var a = G.el("a", "", c.link.replace(/^https?:\/\//, "")); a.href = c.link; a.target = "_blank"; a.rel = "noopener"; meta.appendChild(a);
+      cell.appendChild(meta);
+      if (!c.friends.length) cell.appendChild(G.el("div", "small", "No friends yet."));
+      c.friends.sort(function (x, y) { return y.signed_up - x.signed_up; }).forEach(function (f) {
+        var line = "@" + f.friend + " · joined " + new Date(f.signed_up).toLocaleDateString() + " · " +
+          (f.status === "in progress" ? f.shots + "/" + p.shots + " shots, " + f.days_left + "d left" : f.status === "expired" ? "missed" : "qualified");
+        var div = G.el("div", "small", line); div.style.marginTop = "6px"; cell.appendChild(div);
+      });
+      if (c.owed > 0) {
+        var pay = G.el("button", "btn sm", "mark " + G.money(c.owed) + " paid"); pay.type = "button"; pay.style.marginTop = "12px";
+        pay.onclick = function (ev) {
+          ev.stopPropagation();
+          if (!pay.dataset.sure) { pay.dataset.sure = "1"; pay.textContent = "tap again to confirm " + G.money(c.owed) + " to @" + c.username; return; }
+          pay.disabled = true; pay.textContent = "saving…";
+          G.post({ a: "pay", k: k, username: c.username, amount: c.owed }).then(function (r) {
+            if (r && r.ok) return load();
+            pay.disabled = false; pay.dataset.sure = ""; pay.textContent = (r && r.error) || "failed, try again";
+          }).catch(function () { pay.disabled = false; pay.dataset.sure = ""; pay.textContent = "couldn't connect, try again"; });
+        };
+        cell.appendChild(pay);
+      }
+      tr.addEventListener("click", function () { det.hidden = !det.hidden; });
+      body.appendChild(tr); body.appendChild(det);
+    });
+  }
+
+  $("addbtn").addEventListener("click", function () {
+    var u = $("add").value.trim().replace(/^@/, ""), m = $("barmsg"), b = $("addbtn");
+    if (!u) return;
+    b.disabled = true; m.className = "msg"; m.textContent = "Adding…";
+    G.post({ a: "add", k: k, username: u }).then(function (r) {
+      b.disabled = false;
+      if (!r || !r.ok) { m.className = "msg err"; m.textContent = (r && r.error) || "Couldn't add."; return; }
+      $("add").value = ""; m.textContent = "";
+      m.appendChild(document.createTextNode("Added @" + r.username + ". Send them their stats page: "));
+      var a = G.el("a", "", r.stats.replace(/^https?:\/\//, "")); a.href = r.stats; m.appendChild(a);
+      G.get({ a: "team", k: k }).then(function (d) { if (d && d.ok) render(d); });
+    }).catch(function () { b.disabled = false; m.className = "msg err"; m.textContent = "Couldn't connect."; });
+  });
+
+  $("refresh").addEventListener("click", function () {
+    var b = $("refresh"), m = $("barmsg"); b.disabled = true; b.textContent = "refreshing…"; m.className = "msg"; m.textContent = "";
+    G.post({ a: "refresh", k: k }).then(function (r) {
+      b.disabled = false; b.textContent = "refresh now";
+      if (!r || !r.ok) { m.className = "msg err"; m.textContent = (r && r.error) || "Refresh failed. Check last_error in the Config tab."; return; }
+      load();
+    }).catch(function () { b.disabled = false; b.textContent = "refresh now"; m.className = "msg err"; m.textContent = "Couldn't connect."; });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

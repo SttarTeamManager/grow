@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grow with Sttar</title>
+<meta name="description" content="Get your own Sttar invite link and earn for every friend you bring on.">
+<meta property="og:title" content="Grow with Sttar">
+<meta property="og:description" content="Get your own Sttar invite link and earn for every friend you bring on.">
+<meta property="og:url" content="https://grow.sttar.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sttar">
+<meta name="theme-color" content="#F7F1EA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cpath d='M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z' fill='%23121212'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/grow.css">
+</head>
+<body>
+<main class="wrap">
+  <a class="brand" href="https://sttar.com" aria-label="Sttar: Social Archive">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><path fill="#121212" d="M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z"/></svg>
+    <span>Sttar: Social Archive</span>
+  </a>
+
+  <h1 class="rise" id="headline">Bring your friends to Sttar.</h1>
+  <p class="lead rise" id="lead">Get your own invite link and see every friend who joins from it.</p>
+
+  <a class="btn ghost" id="back" href="/me/" hidden style="margin-top:26px">see my stats</a>
+
+  <form class="card rise" id="form" style="margin-top:26px" novalidate>
+    <div class="field">
+      <label for="u">Your Sttar username</label>
+      <div class="at"><span>@</span><input id="u" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></div>
+    </div>
+    <div class="field">
+      <label for="e">The email on your Sttar account</label>
+      <input id="e" type="email" autocomplete="email" autocapitalize="none" required>
+    </div>
+    <button class="btn" id="go" type="submit">get my link</button>
+    <p class="msg" id="msg" role="status"></p>
+    <p class="small muted" style="margin:6px 0 0">Already joined? Enter the same details to get back to your stats. Not on Sttar yet? <a href="https://sttar.com">Get the app</a> first.</p>
+  </form>
+
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><b>1</b><p>Get your link and share it anywhere.</p></li>
+    <li><b>2</b><p id="step2">Friends join Sttar from it and follow you first.</p></li>
+    <li><b>3</b><p id="step3">Track every friend on your own stats page.</p></li>
+  </ol>
+  <p class="small muted" id="fine" style="margin-top:18px"></p>
+
+  <p class="foot"><a href="/rules/">Program rules</a> · Questions? <a href="mailto:hello@sttar.com">hello@sttar.com</a></p>
+</main>
+
+<script src="/assets/grow.js"></script>
+<script>
+(function () {
+  var G = window.GROW, $ = function (id) { return document.getElementById(id); };
+
+  // the program's numbers come from the Config sheet, so copy never drifts from what's paid
+  function describe(p) {
+    $("step2").textContent = "Friends join Sttar from it, follow you first, and post " + p.shots + " Daily Shots in their first " +
+      (p.days === 7 ? "week" : p.days + " days") + ".";
+    if (p.showEarnings && p.rate > 0) {
+      $("headline").textContent = "Bring your friends. Get paid.";
+      $("lead").textContent = "Get your own invite link. Earn " + G.money(p.rate) + " for every friend who joins and starts posting.";
+      $("step3").textContent = "You earn " + G.money(p.rate) + " for each one. Paid monthly.";
+      $("fine").textContent = p.cap > 0 ? "Up to " + G.money(p.cap) + " a month per person. A friend counts when their account is new." : "A friend counts when their account is new.";
+    }
+    if (!p.open) { $("go").textContent = "sign in"; $("fine").textContent = "New sign-ups are paused right now. If you already joined, you can still sign in."; }
+  }
+  G.get({ a: "program" }).then(function (r) { if (r && r.ok) describe(r.program); }).catch(function () {});
+
+  if (G.load("grow_k")) { $("back").href = "/me/?k=" + encodeURIComponent(G.load("grow_k")); $("back").hidden = false; }
+
+  $("form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var u = $("u").value.trim().replace(/^@/, ""), e = $("e").value.trim(), msg = $("msg"), go = $("go"), label = go.textContent;
+    msg.className = "msg";
+    if (!u || !e) { msg.className = "msg err"; msg.textContent = "Enter your username and email."; return; }
+    go.disabled = true; go.textContent = "checking…"; msg.textContent = "";
+    G.post({ a: "join", username: u, email: e }).then(function (r) {
+      if (r && r.ok) { G.save("grow_k", r.token); location.href = "/me/?k=" + encodeURIComponent(r.token) + (r.returning ? "" : "&new=1"); return; }
+      msg.className = "msg err"; msg.textContent = (r && r.error) || "Something went wrong. Try again.";
+      go.disabled = false; go.textContent = label;
+    }).catch(function () {
+      msg.className = "msg err"; msg.textContent = "Couldn't connect. Check your signal and try again.";
+      go.disabled = false; go.textContent = label;
+    });
+  });
+})();
+</script>
+</body>
+</html>
