@@ -3,33 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Team overview · Grow with Sttar</title>
+<title>Team · Sttar Ambassadors</title>
+<meta name="description" content="Team overview.">
+<link rel="canonical" href="https://grow.sttar.com/team/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sttar">
+<meta property="og:url" content="https://grow.sttar.com/team/">
+<meta property="og:title" content="Team · Sttar Ambassadors">
+<meta property="og:description" content="Team overview.">
+<meta property="og:image" content="https://sttar.com/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#F7F1EA">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cpath d='M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z' fill='%23121212'/%3E%3C/svg%3E">
+<link rel="icon" href="https://sttar.com/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="https://sttar.com/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/assets/grow.css">
-<style>
-  h1{text-align:left;font-size:clamp(34px,7vw,48px);margin-top:36px}
-  .tiles{grid-template-columns:repeat(2,1fr)}
-  @media (min-width:720px){.tiles{grid-template-columns:repeat(6,1fr)}}
-  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
-  .bar input{flex:1;min-width:180px;height:42px}
-  .bar .at span{height:42px}
-</style>
 </head>
-<body>
-<main class="wrap wide">
-  <a class="brand" href="/" aria-label="Sttar: Social Archive">
-    <svg viewBox="0 0 36 36" aria-hidden="true"><path fill="#121212" d="M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z"/></svg>
-    <span>Sttar: Social Archive</span>
-  </a>
-
-  <section id="gate" hidden>
-    <h1>Team overview</h1>
+<body data-page="team" data-footer="mini">
+<section class="section" style="padding-top:clamp(32px,5vw,56px)"><div class="container">
+<section id="gate" hidden>
+    <h1 class="h-lg">team overview</h1>
     <form class="card" id="keyform" style="margin-top:20px;max-width:420px">
       <label for="key">Team key</label>
       <input id="key" type="text" autocapitalize="none" autocorrect="off" spellcheck="false">
@@ -39,11 +36,11 @@
   </section>
 
   <section id="page" hidden>
-    <h1>Creators</h1>
+    <span class="eyebrow">Team</span><h1 class="h-lg">ambassadors &amp; groups</h1>
     <p class="muted" style="margin:8px 0 0">Updated <span id="updated">…</span>. Refreshes on its own every hour.</p>
 
-    <div class="tiles">
-      <div class="tile"><div class="n" id="t1">–</div><div class="l">creators</div></div>
+    <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+      <div class="tile"><div class="n" id="t1">–</div><div class="l">ambassadors + groups</div></div>
       <div class="tile"><div class="n" id="t0">–</div><div class="l">link visits</div></div>
       <div class="tile"><div class="n" id="t2">–</div><div class="l">friends joined</div></div>
       <div class="tile"><div class="n" id="t3">–</div><div class="l">in progress</div></div>
@@ -51,8 +48,8 @@
       <div class="tile"><div class="n" id="t5">–</div><div class="l">owed now</div></div>
     </div>
 
-    <div class="bar">
-      <div class="at" style="flex:1;min-width:200px"><span>@</span><input id="add" type="text" placeholder="add a creator by username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+    <div class="toolbar">
+      <div class="at" style="flex:1;min-width:200px"><span>@</span><input id="add" type="text" placeholder="add an ambassador by username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
       <button class="btn sm" id="addbtn" type="button">add</button>
       <button class="btn sm ghost" id="refresh" type="button">refresh now</button>
       <a class="btn sm ghost" id="sheet" target="_blank" rel="noopener">open sheet</a>
@@ -61,15 +58,15 @@
 
     <div class="card scroll" style="padding:6px 10px;margin-top:6px">
       <table>
-        <thead><tr><th>creator</th><th>visits</th><th>joined</th><th>in progress</th><th>qualified</th><th>this month</th><th>earned</th><th>paid</th><th>owed</th><th>pay to</th></tr></thead>
+        <thead><tr><th>name</th><th>visits</th><th>joined</th><th>in progress</th><th>qualified</th><th>this month</th><th>earned</th><th>paid</th><th>owed</th><th>pay to</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
     <p class="small muted" style="margin-top:14px">Tap a creator to see their friends. After you send someone their money, open their row and tap "mark paid" (it logs to the Payouts tab in the sheet). Rates, the monthly cap and pausing sign-ups are in the Config tab.</p>
   </section>
-</main>
-
+</div></section>
 <script src="/assets/grow.js"></script>
+<script src="/assets/site.js"></script>
 <script>
 (function () {
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
@@ -96,15 +93,16 @@
 
     var body = $("rows"); body.textContent = "";
     if (!d.creators.length) {
-      var tr = G.el("tr"), td = G.el("td", "muted", "No creators yet. Share grow.sttar.com or add one above.");
+      var tr = G.el("tr"), td = G.el("td", "muted", "Nobody yet. Share grow.sttar.com or add someone above.");
       td.colSpan = 10; td.style.textAlign = "left"; tr.appendChild(td); body.appendChild(tr);
     }
     d.creators.sort(function (a, b) { return b.qualified - a.qualified || b.signups - a.signups || b.joined - a.joined; }).forEach(function (c) {
       var tr = G.el("tr", "c");
-      [ "@" + c.username, c.visits || 0, c.signups, c.in_progress, c.qualified, G.money(c.earned_this_month), G.money(c.earned), G.money(c.paid), G.money(c.owed), c.payout || "–" ]
+      [ (c.type === "group" ? c.name : "@" + c.username), c.visits || 0, c.signups, c.in_progress, c.qualified, G.money(c.earned_this_month), G.money(c.earned), G.money(c.paid), G.money(c.owed), c.payout || "–" ]
         .forEach(function (v) { tr.appendChild(G.el("td", "", v)); });
+      if (c.type === "group") { var pl = G.el("span", "pill", "group"); tr.firstChild.appendChild(pl); }
       var det = G.el("tr", "d"), cell = G.el("td"); cell.colSpan = 10; det.hidden = true; det.appendChild(cell);
-      var meta = G.el("div", "small muted", "Joined " + new Date(c.joined).toLocaleDateString() + " · " + (c.added_by === "team" ? "added by team" : "signed up") + " · ");
+      var meta = G.el("div", "small muted", (c.type === "group" ? "Group account @" + c.username + " · raising for " + c.cause + (c.contact ? " · contact: " + c.contact : "") + " · " : "") + "Joined " + new Date(c.joined).toLocaleDateString() + " · " + (c.added_by === "team" ? "added by team" : "signed up") + " · ");
       var a = G.el("a", "", c.link.replace(/^https?:\/\//, "")); a.href = c.link; a.target = "_blank"; a.rel = "noopener"; meta.appendChild(a);
       cell.appendChild(meta);
       if (!c.friends.length) cell.appendChild(G.el("div", "small", "No friends yet."));

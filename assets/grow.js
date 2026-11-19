@@ -37,5 +37,24 @@ window.GROW = (function () {
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {});
     else { var t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); }
   }
-  return { get: get, post: post, save: save, load: load, forget: forget, money: money, ago: ago, el: el, copy: copy };
+  // fills [data-rate] [data-cap] [data-grate] [data-gcap] [data-shots] [data-days] from the program settings
+  function fill(p) {
+    var set = function (sel, v) { document.querySelectorAll(sel).forEach(function (e) { e.textContent = v; }); };
+    set("[data-rate]", money(p.rate)); set("[data-cap]", money(p.cap));
+    set("[data-grate]", money(p.groupRate || p.rate)); set("[data-gcap]", money(p.groupCap));
+    set("[data-shots]", p.shots); set("[data-days]", p.days === 7 ? "week" : p.days + " days");
+    document.querySelectorAll("[data-if-cap]").forEach(function (e) { e.hidden = !(p.cap > 0); });
+    document.querySelectorAll("[data-if-gcap]").forEach(function (e) { e.hidden = !(p.groupCap > 0); });
+    document.querySelectorAll("[data-if-pay]").forEach(function (e) { e.hidden = !(p.showEarnings && p.rate > 0); });
+  }
+  function lbRow(rank, name, qualified, joined, you) {
+    var row = el("div", "lb-row" + (you ? " you" : ""));
+    row.appendChild(el("span", "lb-rank", rank));
+    row.appendChild(el("span", "lb-name", name + (you ? " (you)" : "")));
+    var num = el("span", "lb-num");
+    num.appendChild(el("b", "", qualified)); num.appendChild(document.createTextNode(" qualified · " + joined + " joined"));
+    row.appendChild(num);
+    return row;
+  }
+  return { get: get, post: post, save: save, load: load, forget: forget, money: money, ago: ago, el: el, copy: copy, fill: fill, lbRow: lbRow };
 })();

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaderboard · Sttar Ambassadors</title>
+<meta name="description" content="This month's top Sttar ambassadors and groups.">
+<link rel="canonical" href="https://grow.sttar.com/leaderboard/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sttar">
+<meta property="og:url" content="https://grow.sttar.com/leaderboard/">
+<meta property="og:title" content="Leaderboard · Sttar Ambassadors">
+<meta property="og:description" content="This month's top Sttar ambassadors and groups.">
+<meta property="og:image" content="https://sttar.com/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F7F1EA">
+<link rel="icon" href="https://sttar.com/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="https://sttar.com/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/grow.css">
+</head>
+<body data-page="leaderboard">
+<section class="section" style="padding-top:clamp(40px,6vw,80px)">
+  <div class="container" style="max-width:720px">
+    <div class="center">
+      <span class="eyebrow pill">Leaderboard</span>
+      <h1 class="h-lg">top this month.</h1>
+      <p class="lede" style="margin-top:16px">Ranked by friends who joined and started posting. Resets every month.</p>
+      <div class="tabs" role="tablist" style="max-width:340px;margin:28px auto 20px">
+        <button type="button" role="tab" id="t-people" aria-selected="true">Ambassadors</button>
+        <button type="button" role="tab" id="t-groups" aria-selected="false">Groups</button>
+      </div>
+    </div>
+    <div class="card" id="board"><div class="empty">Loading…</div></div>
+    <div class="center" style="margin-top:28px"><a class="btn" href="/signup/" id="cta">Get on the board</a></div>
+  </div>
+</section>
+
+<script src="/assets/grow.js"></script>
+<script src="/assets/site.js"></script>
+<script>
+(function () {
+  var G = window.GROW, $ = function (id) { return document.getElementById(id); };
+  var data = { people: [], groups: [] }, which = "people";
+  function render() {
+    $("t-people").setAttribute("aria-selected", which === "people"); $("t-groups").setAttribute("aria-selected", which === "groups");
+    $("cta").href = which === "groups" ? "/signup/?group" : "/signup/";
+    $("cta").textContent = which === "groups" ? "Sign up your group" : "Get on the board";
+    var box = $("board"), list = data[which]; box.textContent = "";
+    if (!list.length) {
+      var e = G.el("div", "empty");
+      e.appendChild(G.el("b", "", "Nobody here yet this month"));
+      e.appendChild(document.createTextNode(which === "groups" ? "Be the first group on the board." : "Be the first name on the board."));
+      box.appendChild(e); return;
+    }
+    list.forEach(function (b) { box.appendChild(G.lbRow(b.rank, which === "groups" ? b.name : "@" + b.username, b.qualified, b.joined)); });
+  }
+  $("t-people").onclick = function () { which = "people"; render(); };
+  $("t-groups").onclick = function () { which = "groups"; render(); };
+  if (/[?&]groups\b/.test(location.search)) which = "groups";
+  G.get({ a: "public" }).then(function (d) { if (d && d.ok) data = { people: d.people || [], groups: d.groups || [] }; render(); })
+    .catch(function () { render(); });
+})();
+</script>
+
+</body>
+</html>

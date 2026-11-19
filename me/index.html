@@ -3,194 +3,247 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>My stats · Grow with Sttar</title>
+<title>My stats · Sttar Ambassadors</title>
+<meta name="description" content="Track your Sttar invite link.">
+<link rel="canonical" href="https://grow.sttar.com/me/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sttar">
+<meta property="og:url" content="https://grow.sttar.com/me/">
+<meta property="og:title" content="My stats · Sttar Ambassadors">
+<meta property="og:description" content="Track your Sttar invite link.">
+<meta property="og:image" content="https://sttar.com/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#F7F1EA">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cpath d='M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z' fill='%23121212'/%3E%3C/svg%3E">
+<link rel="icon" href="https://sttar.com/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="https://sttar.com/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/assets/grow.css">
 </head>
-<body>
-<main class="wrap">
-  <a class="brand" href="/" aria-label="Sttar: Social Archive">
-    <svg viewBox="0 0 36 36" aria-hidden="true"><path fill="#121212" d="M18 0s.24 6.8 2.56 11.27C23.9 7.27 27 2.45 27 2.45s-3.05 5.91-4.84 11.1c3.83 3.85 13.84 4.45 13.84 4.45s-9.88.46-13.71 4.29C18.46 26.12 18 36 18 36s-.33-6.77-2.62-11.27C12.07 28.77 9 33.54 9 33.54s3.03-5.85 4.87-11.05C9.86 18.47 0 18 0 18s9.88-.46 13.71-4.29C17.54 9.88 18 0 18 0Z"/></svg>
-    <span>Sttar: Social Archive</span>
-  </a>
-
-  <section id="bad" hidden>
-    <h1>Link not found.</h1>
-    <p class="lead" id="badmsg">This stats link isn't valid.</p>
-    <a class="btn" href="/" style="margin-top:26px">sign in again</a>
-  </section>
-
-  <section id="page">
-    <h1 id="hello" style="font-size:clamp(40px,12vw,56px)">hey&nbsp;<span class="skeleton">friend</span></h1>
-    <p class="lead" id="sub">Here's how your link is doing.</p>
-
-    <div class="card" style="margin-top:26px">
-      <label>Your invite link</label>
-      <span class="linkbox" id="link"><span class="skeleton">grow.sttar.com/join/?you</span></span>
-      <div class="row">
-        <button class="btn" id="share" type="button">share</button>
-        <button class="btn ghost" id="copy" type="button">copy</button>
+<body data-page="me" data-footer="mini">
+<!-- SIGN IN -->
+<section class="section" id="signin" hidden style="padding-top:clamp(40px,6vw,80px)">
+  <div class="container form-wrap">
+    <div>
+      <span class="eyebrow pill">My stats</span>
+      <h1 class="h-lg">see how your link is doing.</h1>
+      <p class="lede" style="margin-top:18px">Sign in with the Sttar account you joined with. Groups use the account their link opens.</p>
+      <p class="small muted" style="margin-top:24px">Not an ambassador yet? <a href="/signup/">Join here</a>.</p>
+    </div>
+    <form class="card" id="form" style="padding:clamp(22px,3vw,32px)" novalidate>
+      <div class="field">
+        <label for="u">Sttar username</label>
+        <div class="at"><span>@</span><input id="u" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
       </div>
-      <button class="linkish" id="qrbtn" type="button">show QR code</button>
-      <div id="qrbox" hidden class="center">
-        <canvas id="qr" width="660" height="660" style="width:220px;height:220px;border-radius:10px"></canvas>
-        <div><a class="linkish" id="qrsave" download="my-sttar-link.png">save as image</a></div>
+      <div class="field">
+        <label for="e">Email on that Sttar account</label>
+        <input id="e" type="email" autocomplete="email" autocapitalize="none">
+      </div>
+      <button class="btn block" id="go" type="submit">Open my stats</button>
+      <p class="msg" id="msg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="section" id="dash" hidden style="padding-top:clamp(32px,5vw,64px)">
+  <div class="container">
+    <div class="dash-head">
+      <div>
+        <span class="eyebrow" id="kind">Ambassador</span>
+        <h1 id="hello"><span class="skeleton">hey there</span></h1>
+        <p class="tagline" id="sub">Here's how your link is doing.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="share" type="button">Share my link</button>
       </div>
     </div>
 
-    <div class="card">
-      <label>Ready to post</label>
-      <p class="small muted" style="margin:0 0 4px">Tap one to copy it with your link.</p>
-      <div id="kit"></div>
-    </div>
-
-    <div class="tiles four">
+    <div class="tiles">
       <div class="tile"><div class="n" id="n0">–</div><div class="l">link visits</div></div>
-      <div class="tile"><div class="n" id="n1">–</div><div class="l">joined</div></div>
+      <div class="tile"><div class="n" id="n1">–</div><div class="l">friends joined</div></div>
       <div class="tile"><div class="n" id="n2">–</div><div class="l">in progress</div></div>
       <div class="tile"><div class="n" id="n3">–</div><div class="l">qualified</div></div>
     </div>
 
-    <div class="card" id="moneycard" hidden style="margin-top:14px">
-      <div class="money big"><span>You're owed</span><b id="owed">$0</b></div>
-      <div class="money"><span id="monthlabel">Earned this month</span><b id="month">$0</b></div>
-      <div class="money"><span>Earned all time</span><b id="earned">$0</b></div>
-      <div class="money"><span>Paid out</span><b id="paid">$0</b></div>
-      <div style="margin-top:14px">
-        <label for="payout">Where should we pay you? (Venmo or Zelle)</label>
-        <div class="row">
-          <input id="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" placeholder="@your-venmo" style="flex:3">
-          <button class="btn sm" id="savepay" type="button" style="height:52px;flex:1">save</button>
+    <div class="dash">
+      <div>
+        <div class="card">
+          <h2>Your friends</h2>
+          <div id="friends"><p class="muted">Loading…</p></div>
+        </div>
+        <div class="card" id="lbcard" hidden>
+          <h2 id="lbtitle">Top this month</h2>
+          <div id="lb"></div>
+          <p class="small muted" id="lbme" style="margin-top:12px" hidden></p>
+        </div>
+        <div class="card">
+          <h2>How a friend counts</h2>
+          <ul class="tick" style="margin-top:4px">
+            <li>They make a new Sttar account from your link</li>
+            <li id="rule-follow">They follow you first. Your link opens your profile to make that easy</li>
+            <li>They post <span data-shots>3</span> Daily Shots in their first <span data-days>week</span></li>
+          </ul>
+          <p class="small muted" style="margin-top:16px">New friends show up within an hour. <a href="/faq/">More questions</a></p>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2 id="linktitle">Your invite link</h2>
+          <span class="linkbox" id="link"><span class="skeleton">grow.sttar.com/join/?you</span></span>
+          <div class="row">
+            <button class="btn" id="copy" type="button">Copy</button>
+            <button class="btn ghost" id="qrbtn" type="button">QR code</button>
+          </div>
+          <div id="qrbox" hidden class="center" style="margin-top:16px">
+            <canvas id="qr" width="660" height="660" style="width:200px;height:200px;border-radius:10px;margin:0 auto;display:block"></canvas>
+            <a class="linkish" id="qrsave" download="my-sttar-link.png" style="margin-top:10px">Save as image</a>
+          </div>
+        </div>
+
+        <div class="card" id="moneycard" hidden>
+          <h2 id="moneytitle">Earnings</h2>
+          <div class="money big"><span id="owedlabel">Owed to you</span><b id="owed">$0</b></div>
+          <div class="money"><span id="monthlabel">This month</span><b id="month">$0</b></div>
+          <div class="money"><span>All time</span><b id="earned">$0</b></div>
+          <div class="money"><span>Paid out</span><b id="paid">$0</b></div>
+          <div style="margin-top:16px">
+            <label for="payout" id="paylabel">Where should we pay you? (Venmo or Zelle)</label>
+            <div class="row">
+              <input id="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" placeholder="@your-venmo" style="flex:2.4">
+              <button class="btn" id="savepay" type="button">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Ready to post</h2>
+          <p class="small muted">Tap one to copy it with your link.</p>
+          <div id="kit"></div>
         </div>
       </div>
     </div>
 
-    <h2>Your friends</h2>
-    <div class="card" id="friends"><p class="muted" style="margin:0">Loading…</p></div>
+    <p class="small muted center" style="margin-top:32px">Updated <span id="updated">…</span>. Numbers refresh every hour. Bookmark this page to come back. <a href="#" id="out">Sign out</a></p>
+  </div>
+</section>
 
-    <section id="lbwrap" hidden>
-      <h2>Top this month</h2>
-      <div class="card" id="lb"></div>
-    </section>
-
-    <h2>How a friend counts</h2>
-    <ol class="steps">
-      <li><b>1</b><p>They make a new Sttar account from your link.</p></li>
-      <li><b>2</b><p>You're the first person they follow. Your link opens your profile to make that easy.</p></li>
-      <li><b>3</b><p id="rule">They post 3 Daily Shots in their first week.</p></li>
-    </ol>
-    <p class="small muted" style="margin-top:18px">Posting your link publicly? Mention that you're a Sttar ambassador.</p>
-
-    <h2>Questions</h2>
-    <div class="card faq">
-      <details><summary>My friend joined but isn't showing up</summary><p>They need to follow you before anyone else, within 2 days of signing up. Your link opens your profile so they can do it right away. New friends appear here within an hour.</p></details>
-      <details><summary>Does someone who already has Sttar count?</summary><p>No. Only brand-new accounts made after you got your link count.</p></details>
-      <details><summary>What's a Daily Shot?</summary><p>A photo posted to their Sttar of the Day. Up to 5 a day, and any <span data-shots>3</span> in their first <span data-days>week</span> qualifies them.</p></details>
-      <details id="faqpay" hidden><summary>When do I get paid?</summary><p>Once a month, for everyone who qualified the month before. Add your Venmo or Zelle above so we know where to send it.</p></details>
-      <details><summary>Where should I share my link?</summary><p>Group chats and direct messages work best. Friends who join together post more, so invite a few at once.</p></details>
-    </div>
-
-    <p class="foot">Updated <span id="updated">…</span>. Numbers refresh every hour.<br>Bookmark this page to come back to it.<br><a href="/rules/">Program rules</a> · <a href="#" id="out">Sign out</a></p>
-  </section>
-</main>
+<!-- BAD LINK -->
+<section class="section" id="bad" hidden>
+  <div class="container center" style="max-width:560px">
+    <h1 class="h-lg">link not found.</h1>
+    <p class="lede" id="badmsg" style="margin-top:16px">This stats link isn't valid.</p>
+    <div class="btn-row" style="margin-top:28px"><a class="btn" href="/me/">Sign in</a></div>
+  </div>
+</section>
 
 <script src="/assets/qr.js"></script>
 <script src="/assets/grow.js"></script>
+<script src="/assets/site.js"></script>
 <script>
 (function () {
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
   var q = new URLSearchParams(location.search);
   var k = q.get("k") || G.load("grow_k") || "";
-  var fail = function (m) { $("page").hidden = true; $("bad").hidden = false; if (m) $("badmsg").textContent = m; };
-  if (!k) return fail("Sign in to see your stats.");
+  var show = function (id) { ["signin", "dash", "bad"].forEach(function (x) { $(x).hidden = x !== id; }); };
 
-  $("out").addEventListener("click", function (e) { e.preventDefault(); G.forget("grow_k"); location.href = "/"; });
+  // ---------- sign in ----------
+  $("form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var u = $("u").value.trim().replace(/^@/, ""), e = $("e").value.trim(), msg = $("msg"), go = $("go");
+    msg.className = "msg err";
+    if (!u || !e) { msg.textContent = "Enter your username and email."; return; }
+    go.disabled = true; go.textContent = "Checking…"; msg.textContent = "";
+    G.post({ a: "join", mode: "signin", username: u, email: e }).then(function (r) {
+      if (r && r.ok) { G.save("grow_k", r.token); location.href = "/me/?k=" + encodeURIComponent(r.token); return; }
+      msg.innerHTML = ""; msg.textContent = (r && r.error) || "Something went wrong. Try again.";
+      go.disabled = false; go.textContent = "Open my stats";
+    }).catch(function () { msg.textContent = "Couldn't connect. Try again."; go.disabled = false; go.textContent = "Open my stats"; });
+  });
+  if (!k) { show("signin"); return; }
 
+  $("out").addEventListener("click", function (e) { e.preventDefault(); G.forget("grow_k"); location.href = "/me/"; });
+
+  // ---------- dashboard ----------
+  show("dash");
   G.get({ a: "me", k: k }).then(function (d) {
-    if (!d || !d.ok) { G.forget("grow_k"); return fail(d && d.error); }
+    if (!d || !d.ok) { G.forget("grow_k"); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
     G.save("grow_k", k);
-    var p = d.program, shown = d.link.replace(/^https?:\/\//, "");
+    var p = d.program, group = d.type === "group", shown = d.link.replace(/^https?:\/\//, "");
+    var rate = group ? (p.groupRate || p.rate) : p.rate, cap = group ? p.groupCap : p.cap;
+    G.fill(p);
 
-    $("hello").textContent = "hey " + d.name;
-    if (q.get("new")) $("sub").textContent = "You're in. Share your link to get started.";
+    $("kind").textContent = group ? "Group" : "Ambassador";
+    $("hello").textContent = group ? d.name : "hey " + d.name;
+    $("sub").textContent = q.get("new") ? (group ? "You're in. Share your group's link to start raising." : "You're in. Share your link to get started.")
+      : (group ? "Raising for " + d.cause + "." : "Here's how your link is doing.");
+    if (group) {
+      $("linktitle").textContent = "Your group's link";
+      $("rule-follow").textContent = "They follow @" + d.username + " first. Your link opens that profile to make it easy";
+      $("share").textContent = "Share our link";
+    }
     $("link").textContent = shown;
-    $("copy").onclick = function () { G.copy(d.link, $("copy"), "copy"); };
+    $("copy").onclick = function () { G.copy(d.link, $("copy"), "Copy"); };
     $("share").onclick = function () {
       if (navigator.share) navigator.share({ title: "Join me on Sttar", url: d.link }).catch(function () {});
-      else G.copy(d.link, $("share"), "share");
+      else G.copy(d.link, $("share"), $("share").textContent);
     };
 
     $("n0").textContent = d.visits || 0; $("n1").textContent = d.signups; $("n2").textContent = d.in_progress; $("n3").textContent = d.qualified;
-    $("rule").textContent = "They post " + p.shots + " Daily Shots in their first " + (p.days === 7 ? "week" : p.days + " days") + ".";
 
     if (p.showEarnings) {
       $("moneycard").hidden = false;
+      if (group) { $("moneytitle").textContent = "Raised for " + d.cause; $("owedlabel").textContent = "Waiting to be sent"; $("paylabel").textContent = "Where should we send it? (Venmo or Zelle)"; }
       $("owed").textContent = G.money(d.owed); $("month").textContent = G.money(d.earned_this_month);
       $("earned").textContent = G.money(d.earned); $("paid").textContent = G.money(d.paid);
-      $("monthlabel").textContent = "Earned this month" + (p.cap > 0 ? " (max " + G.money(p.cap) + ")" : "");
+      $("monthlabel").textContent = "This month" + (cap > 0 ? " (max " + G.money(cap) + ")" : "");
       $("payout").value = d.payout || "";
       $("savepay").onclick = function () {
         var b = $("savepay"); b.disabled = true; b.textContent = "…";
         G.post({ a: "payout", k: k, payout: $("payout").value }).then(function (r) {
-          b.disabled = false; b.textContent = r && r.ok ? "saved" : "retry";
-          setTimeout(function () { b.textContent = "save"; }, 1600);
-        }).catch(function () { b.disabled = false; b.textContent = "retry"; });
+          b.disabled = false; b.textContent = r && r.ok ? "Saved" : "Retry";
+          setTimeout(function () { b.textContent = "Save"; }, 1600);
+        }).catch(function () { b.disabled = false; b.textContent = "Retry"; });
       };
     }
 
-    var week = p.days === 7 ? "week" : p.days + " days";
-    document.querySelectorAll("[data-shots]").forEach(function (e) { e.textContent = p.shots; });
-    document.querySelectorAll("[data-days]").forEach(function (e) { e.textContent = week; });
-    if (p.showEarnings) $("faqpay").hidden = false;
-
-    // captions to copy
-    [ "we're all posting our day on Sttar now. 5 pics a day, just friends. join me: ",
+    // captions
+    var caps = group ? [
+      "join Sttar from our link and follow us. every friend who starts posting raises " + G.money(rate) + " for " + d.cause + ": ",
+      "we're all on Sttar now, 5 pics a day with the chapter. join us: ",
+      "help us raise money for " + d.cause + ", just download Sttar and post your day: "
+    ] : [
+      "we're all posting our day on Sttar now. 5 pics a day, just friends. join me: ",
       "this is what my day actually looked like. i post it on Sttar, add me: ",
-      "download Sttar and follow me, i want to see your day: " ].forEach(function (t) {
-      var b = G.el("button", "caption"), txt = G.el("span", "", t + shown), tag = G.el("em", "", "copy");
-      b.type = "button"; b.appendChild(txt); b.appendChild(tag);
+      "download Sttar and follow me, i want to see your day: "
+    ];
+    caps.forEach(function (t) {
+      var b = G.el("button", "caption"), tag = G.el("em", "", "copy");
+      b.type = "button"; b.appendChild(G.el("span", "", t + shown)); b.appendChild(tag);
       b.onclick = function () { G.copy(t + d.link, tag, "copy"); };
       $("kit").appendChild(b);
     });
 
-    // QR code for sharing in person
+    // QR
     $("qrbtn").onclick = function () {
-      var boxq = $("qrbox"); boxq.hidden = !boxq.hidden;
-      $("qrbtn").textContent = boxq.hidden ? "show QR code" : "hide QR code";
-      if (boxq.hidden || boxq.dataset.done) return;
+      var box = $("qrbox"); box.hidden = !box.hidden;
+      if (box.hidden || box.dataset.done) return;
       var qr = qrcode(0, "M"); qr.addData(d.link); qr.make();
-      var n = qr.getModuleCount(), cv = $("qr"), cx = cv.getContext("2d"), pad = 4, cell = Math.floor(cv.width / (n + pad * 2));
-      var off = Math.floor((cv.width - cell * n) / 2);
+      var n = qr.getModuleCount(), cv = $("qr"), cx = cv.getContext("2d"), cell = Math.floor(cv.width / (n + 8)), off = Math.floor((cv.width - cell * n) / 2);
       cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height); cx.fillStyle = "#121212";
       for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) cx.fillRect(off + c * cell, off + r * cell, cell, cell);
-      $("qrsave").href = cv.toDataURL("image/png"); boxq.dataset.done = "1";
+      $("qrsave").href = cv.toDataURL("image/png"); box.dataset.done = "1";
     };
 
-    // this month's top creators
-    if (d.leaderboard && d.leaderboard.top.length) {
-      $("lbwrap").hidden = false;
-      d.leaderboard.top.forEach(function (b) {
-        var row = G.el("div", "friend" + (b.you ? " you" : "")), left = G.el("div", "who", b.rank + ".  @" + b.username + (b.you ? " (you)" : ""));
-        row.appendChild(left);
-        row.appendChild(G.el("span", "meta", b.qualified + " qualified · " + b.joined + " joined"));
-        $("lb").appendChild(row);
-      });
-      if (d.leaderboard.rank > 5) {
-        var mine = G.el("p", "small muted", "You're #" + d.leaderboard.rank + " of " + d.leaderboard.of + " this month."); mine.style.margin = "12px 0 0";
-        $("lb").appendChild(mine);
-      }
-    }
-
+    // friends
     var box = $("friends"); box.textContent = "";
     if (!d.friends.length) {
-      box.appendChild(G.el("p", "muted", "Nobody yet. Friends show up here within an hour of joining and following you."));
-      box.firstChild.style.margin = "0";
+      var e = G.el("div", "empty"); e.appendChild(G.el("b", "", "No friends yet")); e.appendChild(document.createTextNode("Share your link. Friends show up here within an hour of joining."));
+      box.appendChild(e);
     }
     var order = { "in progress": 0, "qualified": 1, "expired": 2 };
     d.friends.sort(function (a, b) { return order[a.status] - order[b.status] || b.signed_up - a.signed_up; }).forEach(function (f) {
@@ -199,20 +252,18 @@
       left.appendChild(G.el("div", "who", "@" + f.friend));
       row.appendChild(left);
       if (f.status === "in progress") {
-        left.appendChild(G.el("div", "meta", f.shots + " of " + p.shots + " Daily Shots · " +
-          (f.days_left > 0 ? f.days_left + (f.days_left === 1 ? " day left" : " days left") : "last day")));
-        var nudge = G.el("button", "linkish", "send a nudge"); nudge.type = "button"; nudge.style.margin = "4px 0 0";
+        left.appendChild(G.el("div", "meta", f.shots + " of " + p.shots + " Daily Shots · " + (f.days_left > 0 ? f.days_left + (f.days_left === 1 ? " day left" : " days left") : "last day")));
+        var nudge = G.el("button", "linkish", "send a nudge"); nudge.type = "button"; nudge.style.marginTop = "4px";
         nudge.onclick = function () {
           var text = "post your Sttar of the Day today, i want to see it";
-          if (navigator.share) navigator.share({ text: text }).catch(function () {});
-          else G.copy(text, nudge, "send a nudge");
+          if (navigator.share) navigator.share({ text: text }).catch(function () {}); else G.copy(text, nudge, "send a nudge");
         };
         left.appendChild(nudge);
         var dots = G.el("div", "dots");
         for (var i = 0; i < p.shots; i++) dots.appendChild(G.el("i", i < f.shots ? "on" : ""));
         row.appendChild(dots);
       } else if (f.status === "qualified") {
-        row.appendChild(G.el("span", "tag", p.showEarnings && p.rate ? "+" + G.money(p.rate) : "qualified"));
+        row.appendChild(G.el("span", "tag", p.showEarnings && rate ? "+" + G.money(rate) : "qualified"));
       } else {
         left.appendChild(G.el("div", "meta", "didn't post " + p.shots + " in time"));
         row.appendChild(G.el("span", "tag off", "missed"));
@@ -220,9 +271,17 @@
       box.appendChild(row);
     });
 
+    // leaderboard
+    if (d.leaderboard && d.leaderboard.top.length) {
+      $("lbcard").hidden = false;
+      $("lbtitle").textContent = group ? "Top groups this month" : "Top this month";
+      d.leaderboard.top.forEach(function (b) { $("lb").appendChild(G.lbRow(b.rank, group ? b.name : "@" + b.username, b.qualified, b.joined, b.you)); });
+      if (d.leaderboard.rank > 5) { $("lbme").hidden = false; $("lbme").textContent = "You're #" + d.leaderboard.rank + " of " + d.leaderboard.of + " this month."; }
+    }
     $("updated").textContent = G.ago(d.updated);
-  }).catch(function () { fail("Couldn't load your stats. Check your signal and reload."); });
+  }).catch(function () { show("bad"); $("badmsg").textContent = "Couldn't load your stats. Check your signal and reload."; });
 })();
 </script>
+
 </body>
 </html>

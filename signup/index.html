@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join Sttar Ambassadors</title>
+<meta name="description" content="Get your own Sttar invite link, or one for your whole group, in a minute.">
+<link rel="canonical" href="https://grow.sttar.com/signup/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sttar">
+<meta property="og:url" content="https://grow.sttar.com/signup/">
+<meta property="og:title" content="Join Sttar Ambassadors">
+<meta property="og:description" content="Get your own Sttar invite link, or one for your whole group, in a minute.">
+<meta property="og:image" content="https://sttar.com/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F7F1EA">
+<link rel="icon" href="https://sttar.com/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="https://sttar.com/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/grow.css">
+</head>
+<body data-page="signup" data-footer="mini">
+<section class="section" style="padding-top:clamp(40px,6vw,80px)">
+  <div class="container form-wrap">
+    <div>
+      <span class="eyebrow pill">Join</span>
+      <h1 class="h-lg" id="title">become a Sttar ambassador.</h1>
+      <p class="lede" id="lead" style="margin-top:18px">Get your link in a minute and start earning <b data-rate>$2</b> for every friend who joins and posts.</p>
+      <ul class="tick" id="perks">
+        <li>Your own tracked invite link</li>
+        <li>Live stats: visits, friends joined, who's close to counting</li>
+        <li data-if-pay>Paid monthly by Venmo or Zelle</li>
+      </ul>
+      <p class="small muted" style="margin-top:28px">Already joined? <a href="/me/">Open your stats</a>. Not on Sttar yet? <a href="https://sttar.com">Get the app</a> first, then come back.</p>
+    </div>
+
+    <form class="card" id="form" style="padding:clamp(22px,3vw,32px)" novalidate>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-person" aria-selected="true">Just me</button>
+        <button type="button" role="tab" id="tab-group" aria-selected="false">My group</button>
+      </div>
+
+      <div id="group-fields" hidden>
+        <div class="field">
+          <label for="gname">Group name</label>
+          <input id="gname" type="text" maxlength="50" placeholder="Kappa Delta UIUC">
+        </div>
+        <div class="field">
+          <label for="cause">Where should your earnings go?</label>
+          <input id="cause" type="text" maxlength="80" placeholder="Our philanthropy">
+          <span class="hint">Your philanthropy, chapter fund, or any cause.</span>
+        </div>
+        <div class="field">
+          <label for="contact">Your name and role</label>
+          <input id="contact" type="text" maxlength="80" placeholder="Sarah, VP of Marketing">
+        </div>
+        <div class="legend">The Sttar account your link opens</div>
+      </div>
+
+      <div class="field">
+        <label for="u" id="u-label">Your Sttar username</label>
+        <div class="at"><span>@</span><input id="u" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+        <span class="hint" id="u-hint" hidden>Use your chapter's account if you have one. New friends follow this account, so it can't be someone's personal ambassador account.</span>
+      </div>
+      <div class="field">
+        <label for="e">Email on that Sttar account</label>
+        <input id="e" type="email" autocomplete="email" autocapitalize="none">
+        <span class="hint">Only used to check it's your account.</span>
+      </div>
+      <button class="btn block" id="go" type="submit">Get my link</button>
+      <p class="msg" id="msg" role="status"></p>
+      <p class="small muted" id="fine">By joining you agree to the <a href="/rules/">program rules</a>. Your username can appear on the leaderboard.</p>
+    </form>
+  </div>
+</section>
+
+<script src="/assets/grow.js"></script>
+<script src="/assets/site.js"></script>
+<script>
+(function () {
+  var G = window.GROW, $ = function (id) { return document.getElementById(id); };
+  var type = "person";
+
+  function setType(t) {
+    type = t;
+    var g = t === "group";
+    $("tab-person").setAttribute("aria-selected", g ? "false" : "true");
+    $("tab-group").setAttribute("aria-selected", g ? "true" : "false");
+    $("group-fields").hidden = !g; $("u-hint").hidden = !g;
+    $("u-label").textContent = g ? "Sttar username" : "Your Sttar username";
+    $("title").textContent = g ? "sign up your group." : "become a Sttar ambassador.";
+    $("lead").innerHTML = g ? "One tracked link for your whole chapter. Every friend who joins and posts raises <b data-grate></b> for your cause."
+                            : "Get your link in a minute and start earning <b data-rate></b> for every friend who joins and posts.";
+    $("go").textContent = g ? "Get our group link" : "Get my link";
+    var perks = g ? ["One tracked link for the whole chapter", "Live stats your exec board can check", "Paid monthly to your cause"]
+                  : ["Your own tracked invite link", "Live stats: visits, friends joined, who's close to counting", "Paid monthly by Venmo or Zelle"];
+    $("perks").querySelectorAll("li").forEach(function (li, i) { li.textContent = perks[i]; });
+    $("fine").innerHTML = 'By joining you agree to the <a href="/rules/">program rules</a>. ' + (g ? "Your group name can appear on the leaderboard." : "Your username can appear on the leaderboard.");
+    G.fill(P);
+    $("msg").textContent = "";
+  }
+  var P = { rate: 2, cap: 50, groupRate: 2, groupCap: 200, shots: 3, days: 7, showEarnings: true };
+  $("tab-person").onclick = function () { setType("person"); };
+  $("tab-group").onclick = function () { setType("group"); };
+  setType(/[?&]group\b/.test(location.search) ? "group" : "person");
+
+  G.get({ a: "public" }).then(function (d) { if (d && d.ok) { P = d.program; G.fill(P); } }).catch(function () {});
+
+  $("form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var msg = $("msg"), go = $("go"), label = go.textContent;
+    var body = { a: "join", type: type, username: $("u").value.trim().replace(/^@/, ""), email: $("e").value.trim() };
+    if (type === "group") { body.group_name = $("gname").value.trim(); body.cause = $("cause").value.trim(); body.contact = $("contact").value.trim(); }
+    msg.className = "msg err";
+    if (type === "group" && !body.group_name) { msg.textContent = "Add your group's name."; return; }
+    if (type === "group" && !body.cause) { msg.textContent = "Add where your earnings should go."; return; }
+    if (!body.username || !body.email) { msg.textContent = "Enter the Sttar username and its email."; return; }
+    msg.className = "msg"; msg.textContent = ""; go.disabled = true; go.textContent = "Checking…";
+    G.post(body).then(function (r) {
+      if (r && r.ok) { G.save("grow_k", r.token); location.href = "/me/?k=" + encodeURIComponent(r.token) + (r.returning ? "" : "&new=1"); return; }
+      msg.className = "msg err"; msg.textContent = (r && r.error) || "Something went wrong. Try again.";
+      go.disabled = false; go.textContent = label;
+    }).catch(function () {
+      msg.className = "msg err"; msg.textContent = "Couldn't connect. Check your signal and try again.";
+      go.disabled = false; go.textContent = label;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
