@@ -1,7 +1,7 @@
 /* grow.sttar.com — shared helpers.
    API is the Apps Script web app URL (ends in /exec). It is the only setting on the site. */
 window.GROW = (function () {
-  var API = "PASTE_WEB_APP_URL_HERE";
+  var API = "https://script.google.com/macros/s/AKfycbysnAJAtUSjzc-9T0rpfy8WZZBJOUM6WZhqMJRjWree0FnvUhIdGJG28c2IYCvu2-7-Rw/exec";
 
   function get(params) {
     var qs = Object.keys(params).map(function (k) { return encodeURIComponent(k) + "=" + encodeURIComponent(params[k]); }).join("&");
