@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.classList.add("js")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>My stats · Sttar Ambassadors</title>
+<title>My stats, Sttar ambassadors</title>
 <meta name="description" content="Track your Sttar invite link.">
 <link rel="canonical" href="https://grow.sttar.com/me/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sttar">
 <meta property="og:url" content="https://grow.sttar.com/me/">
-<meta property="og:title" content="My stats · Sttar Ambassadors">
+<meta property="og:title" content="My stats, Sttar ambassadors">
 <meta property="og:description" content="Track your Sttar invite link.">
 <meta property="og:image" content="https://sttar.com/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,132 +19,111 @@
 <meta name="theme-color" content="#F7F1EA">
 <link rel="icon" href="https://sttar.com/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="https://sttar.com/assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="/assets/grow.css">
+<link rel="preload" href="../assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body data-page="me" data-footer="mini">
-<!-- SIGN IN -->
-<section class="section" id="signin" hidden style="padding-top:clamp(40px,6vw,80px)">
-  <div class="container form-wrap">
-    <div>
-      <span class="eyebrow pill">My stats</span>
-      <h1 class="h-lg">see how your link is doing.</h1>
-      <p class="lede" style="margin-top:18px">Sign in with the Sttar account you joined with. Groups use the account their link opens.</p>
-      <p class="small muted" style="margin-top:24px">Not an ambassador yet? <a href="/signup/">Join here</a>.</p>
+<main>
+<section class="sec-s" id="signin" hidden>
+  <div class="container grid12 form-grid">
+    <div class="form-intro">
+      <h1>see how your link is doing.</h1>
+      <p class="lead">Sign in with the Sttar account you joined with. Groups use the account their link opens.</p>
+      <p class="small muted mt-xl">Not in yet? <a href="/signup/">Join here</a>.</p>
     </div>
-    <form class="card" id="form" style="padding:clamp(22px,3vw,32px)" novalidate>
-      <div class="field">
-        <label for="u">Sttar username</label>
-        <div class="at"><span>@</span><input id="u" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
-      </div>
-      <div class="field">
-        <label for="e">Email on that Sttar account</label>
-        <input id="e" type="email" autocomplete="email" autocapitalize="none">
-      </div>
-      <button class="btn block" id="go" type="submit">Open my stats</button>
+    <form class="form-card" id="form" novalidate>
+      <div class="field"><label for="u">Sttar username</label><div class="at"><span aria-hidden="true">@</span><input id="u" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></div></div>
+      <div class="field"><label for="e">Email on that Sttar account</label><input id="e" name="email" type="email" autocomplete="email" autocapitalize="none"></div>
+      <button class="btn mt-lg" id="go" type="submit">Open my stats</button>
       <p class="msg" id="msg" role="status"></p>
     </form>
   </div>
 </section>
 
-<!-- DASHBOARD -->
-<section class="section" id="dash" hidden style="padding-top:clamp(32px,5vw,64px)">
+<section class="sec-s" id="dash" hidden>
   <div class="container">
     <div class="dash-head">
       <div>
-        <span class="eyebrow" id="kind">Ambassador</span>
-        <h1 id="hello"><span class="skeleton">hey there</span></h1>
-        <p class="tagline" id="sub">Here's how your link is doing.</p>
+        <h1 id="hello">your stats</h1>
+        <p class="who" id="who"></p>
       </div>
-      <div class="btn-row">
-        <button class="btn" id="share" type="button">Share my link</button>
-      </div>
+      <button class="btn" id="share" type="button">Share my link</button>
     </div>
 
     <div class="tiles">
-      <div class="tile"><div class="n" id="n0">–</div><div class="l">link visits</div></div>
-      <div class="tile"><div class="n" id="n1">–</div><div class="l">friends joined</div></div>
-      <div class="tile"><div class="n" id="n2">–</div><div class="l">in progress</div></div>
-      <div class="tile"><div class="n" id="n3">–</div><div class="l">qualified</div></div>
+      <div><b id="n0">0</b><span>link visits</span></div>
+      <div><b id="n1">0</b><span>friends joined</span></div>
+      <div><b id="n2">0</b><span>in progress</span></div>
+      <div><b id="n3">0</b><span>qualified</span></div>
     </div>
 
     <div class="dash">
       <div>
-        <div class="card">
-          <h2>Your friends</h2>
-          <div id="friends"><p class="muted">Loading…</p></div>
-        </div>
-        <div class="card" id="lbcard" hidden>
+        <div class="panel"><h2>Your friends</h2><div id="friends"></div></div>
+        <div class="panel" id="lbcard" hidden>
           <h2 id="lbtitle">Top this month</h2>
-          <div id="lb"></div>
-          <p class="small muted" id="lbme" style="margin-top:12px" hidden></p>
+          <table class="board"><thead><tr><th scope="col">Rank</th><th scope="col" id="lbcol">Ambassador</th><th scope="col">Qualified</th><th scope="col">Joined</th></tr></thead><tbody id="lb"></tbody></table>
+          <p class="small muted mt-lg" id="lbme" hidden></p>
         </div>
-        <div class="card">
+        <div class="panel">
           <h2>How a friend counts</h2>
-          <ul class="tick" style="margin-top:4px">
-            <li>They make a new Sttar account from your link</li>
-            <li id="rule-follow">They follow you first. Your link opens your profile to make that easy</li>
-            <li>They post <span data-shots>3</span> Daily Shots in their first <span data-days>week</span></li>
-          </ul>
-          <p class="small muted" style="margin-top:16px">New friends show up within an hour. <a href="/faq/">More questions</a></p>
+          <ol class="rule">
+            <li><div><h3>New account</h3><p>Made from your link, after you joined.</p></div></li>
+            <li><div><h3 id="rule-follow">Follows you first</h3><p>Within 2 days of signing up.</p></div></li>
+            <li><div><h3><span data-shots>3</span> Daily Shots</h3><p>In their first <span data-days>week</span>. New friends show up within an hour.</p></div></li>
+          </ol>
         </div>
       </div>
 
       <div>
-        <div class="card">
+        <div class="panel">
           <h2 id="linktitle">Your invite link</h2>
-          <span class="linkbox" id="link"><span class="skeleton">grow.sttar.com/join/?you</span></span>
-          <div class="row">
-            <button class="btn" id="copy" type="button">Copy</button>
-            <button class="btn ghost" id="qrbtn" type="button">QR code</button>
-          </div>
-          <div id="qrbox" hidden class="center" style="margin-top:16px">
-            <canvas id="qr" width="660" height="660" style="width:200px;height:200px;border-radius:10px;margin:0 auto;display:block"></canvas>
-            <a class="linkish" id="qrsave" download="my-sttar-link.png" style="margin-top:10px">Save as image</a>
+          <span class="linkbox" id="link">grow.sttar.com/join/</span>
+          <div class="row"><button class="btn" id="copy" type="button">Copy</button><button class="btn-quiet" id="qrbtn" type="button" aria-expanded="false">QR code</button></div>
+          <div id="qrbox" hidden class="mt-lg">
+            <canvas id="qr" width="600" height="600" role="img" aria-label="QR code for your invite link"></canvas>
+            <a class="textlink" id="qrsave" download="sttar-link.png" href="#">Save the QR code</a>
           </div>
         </div>
 
-        <div class="card" id="moneycard" hidden>
+        <div class="panel" id="moneycard" hidden>
           <h2 id="moneytitle">Earnings</h2>
-          <div class="money big"><span id="owedlabel">Owed to you</span><b id="owed">$0</b></div>
-          <div class="money"><span id="monthlabel">This month</span><b id="month">$0</b></div>
-          <div class="money"><span>All time</span><b id="earned">$0</b></div>
-          <div class="money"><span>Paid out</span><b id="paid">$0</b></div>
-          <div style="margin-top:16px">
-            <label for="payout" id="paylabel">Where should we pay you? (Venmo or Zelle)</label>
-            <div class="row">
-              <input id="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" placeholder="@your-venmo" style="flex:2.4">
-              <button class="btn" id="savepay" type="button">Save</button>
-            </div>
+          <div class="money">
+            <div class="big"><span id="owedlabel">Owed to you</span><b id="owed">$0</b></div>
+            <div><span id="monthlabel">This month</span><b id="month">$0</b></div>
+            <div><span>All time</span><b id="earned">$0</b></div>
+            <div><span>Paid out</span><b id="paid">$0</b></div>
+          </div>
+          <div class="field mt-lg">
+            <label for="payout" id="paylabel">Where we pay you, Venmo or Zelle</label>
+            <div class="row"><input id="payout" name="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" placeholder="@your-venmo"><button class="btn" id="savepay" type="button">Save</button></div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="panel">
           <h2>Ready to post</h2>
           <p class="small muted">Tap one to copy it with your link.</p>
           <div id="kit"></div>
         </div>
       </div>
     </div>
-
-    <p class="small muted center" style="margin-top:32px">Updated <span id="updated">…</span>. Numbers refresh every hour. Bookmark this page to come back. <a href="#" id="out">Sign out</a></p>
+    <p class="small muted mt-2xl">Updated <span id="updated">recently</span>. Numbers refresh every hour. <button class="textlink" id="out" type="button">Sign out</button></p>
   </div>
 </section>
 
-<!-- BAD LINK -->
-<section class="section" id="bad" hidden>
-  <div class="container center" style="max-width:560px">
-    <h1 class="h-lg">link not found.</h1>
-    <p class="lede" id="badmsg" style="margin-top:16px">This stats link isn't valid.</p>
-    <div class="btn-row" style="margin-top:28px"><a class="btn" href="/me/">Sign in</a></div>
+<section class="sec" id="bad" hidden>
+  <div class="container">
+    <h1>link not found.</h1>
+    <p class="lead mt-lg" id="badmsg">This stats link is not valid.</p>
+    <div class="actions mt-xl"><a class="btn" href="/me/">Sign in</a></div>
   </div>
 </section>
+</main>
 
-<script src="/assets/qr.js"></script>
-<script src="/assets/grow.js"></script>
-<script src="/assets/site.js"></script>
+<script src="../assets/qr.js"></script>
+<script src="../assets/grow.js"></script>
+<script src="../assets/site.js"></script>
 <script>
 (function () {
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
@@ -151,24 +131,21 @@
   var k = q.get("k") || G.load("grow_k") || "";
   var show = function (id) { ["signin", "dash", "bad"].forEach(function (x) { $(x).hidden = x !== id; }); };
 
-  // ---------- sign in ----------
   $("form").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var u = $("u").value.trim().replace(/^@/, ""), e = $("e").value.trim(), msg = $("msg"), go = $("go");
     msg.className = "msg err";
-    if (!u || !e) { msg.textContent = "Enter your username and email."; return; }
-    go.disabled = true; go.textContent = "Checking…"; msg.textContent = "";
+    if (!u) { msg.textContent = "Enter your username."; $("u").focus(); return; }
+    if (!e) { msg.textContent = "Enter the email on that account."; $("e").focus(); return; }
+    go.disabled = true; go.textContent = "Checking"; msg.textContent = "";
     G.post({ a: "join", mode: "signin", username: u, email: e }).then(function (r) {
       if (r && r.ok) { G.save("grow_k", r.token); location.href = "/me/?k=" + encodeURIComponent(r.token); return; }
-      msg.innerHTML = ""; msg.textContent = (r && r.error) || "Something went wrong. Try again.";
-      go.disabled = false; go.textContent = "Open my stats";
-    }).catch(function () { msg.textContent = "Couldn't connect. Try again."; go.disabled = false; go.textContent = "Open my stats"; });
+      msg.textContent = (r && r.error) || "That did not work. Try again."; go.disabled = false; go.textContent = "Open my stats";
+    }).catch(function () { msg.textContent = "Could not connect. Try again."; go.disabled = false; go.textContent = "Open my stats"; });
   });
   if (!k) { show("signin"); return; }
+  $("out").addEventListener("click", function () { G.forget("grow_k"); location.href = "/me/"; });
 
-  $("out").addEventListener("click", function (e) { e.preventDefault(); G.forget("grow_k"); location.href = "/me/"; });
-
-  // ---------- dashboard ----------
   show("dash");
   G.get({ a: "me", k: k }).then(function (d) {
     if (!d || !d.ok) { G.forget("grow_k"); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
@@ -177,14 +154,12 @@
     var rate = group ? (p.groupRate || p.rate) : p.rate, cap = group ? p.groupCap : p.cap;
     G.fill(p);
 
-    $("kind").textContent = group ? "Group" : "Ambassador";
     $("hello").textContent = group ? d.name : "hey " + d.name;
-    $("sub").textContent = q.get("new") ? (group ? "You're in. Share your group's link to start raising." : "You're in. Share your link to get started.")
-      : (group ? "Raising for " + d.cause + "." : "Here's how your link is doing.");
+    $("who").textContent = q.get("new") ? (group ? "You're in. Share your group's link to start raising." : "You're in. Share your link to get started.")
+      : (group ? "Group account @" + d.username + ", raising for " + d.cause : "Ambassador, @" + d.username);
     if (group) {
-      $("linktitle").textContent = "Your group's link";
-      $("rule-follow").textContent = "They follow @" + d.username + " first. Your link opens that profile to make it easy";
-      $("share").textContent = "Share our link";
+      $("linktitle").textContent = "Your group's link"; $("rule-follow").textContent = "Follows @" + d.username + " first";
+      $("share").textContent = "Share our link"; $("lbcol").textContent = "Group";
     }
     $("link").textContent = shown;
     $("copy").onclick = function () { G.copy(d.link, $("copy"), "Copy"); };
@@ -192,96 +167,85 @@
       if (navigator.share) navigator.share({ title: "Join me on Sttar", url: d.link }).catch(function () {});
       else G.copy(d.link, $("share"), $("share").textContent);
     };
-
     $("n0").textContent = d.visits || 0; $("n1").textContent = d.signups; $("n2").textContent = d.in_progress; $("n3").textContent = d.qualified;
 
     if (p.showEarnings) {
       $("moneycard").hidden = false;
-      if (group) { $("moneytitle").textContent = "Raised for " + d.cause; $("owedlabel").textContent = "Waiting to be sent"; $("paylabel").textContent = "Where should we send it? (Venmo or Zelle)"; }
+      if (group) { $("moneytitle").textContent = "Raised for " + d.cause; $("owedlabel").textContent = "Waiting to be sent"; $("paylabel").textContent = "Where we send it, Venmo or Zelle"; }
       $("owed").textContent = G.money(d.owed); $("month").textContent = G.money(d.earned_this_month);
       $("earned").textContent = G.money(d.earned); $("paid").textContent = G.money(d.paid);
-      $("monthlabel").textContent = "This month" + (cap > 0 ? " (max " + G.money(cap) + ")" : "");
+      $("monthlabel").textContent = cap > 0 ? "This month, out of " + G.money(cap) : "This month";
       $("payout").value = d.payout || "";
       $("savepay").onclick = function () {
-        var b = $("savepay"); b.disabled = true; b.textContent = "…";
+        var b = $("savepay"); b.disabled = true;
         G.post({ a: "payout", k: k, payout: $("payout").value }).then(function (r) {
-          b.disabled = false; b.textContent = r && r.ok ? "Saved" : "Retry";
-          setTimeout(function () { b.textContent = "Save"; }, 1600);
+          b.disabled = false; b.textContent = r && r.ok ? "Saved" : "Retry"; setTimeout(function () { b.textContent = "Save"; }, 1600);
         }).catch(function () { b.disabled = false; b.textContent = "Retry"; });
       };
     }
 
-    // captions
     var caps = group ? [
       "join Sttar from our link and follow us. every friend who starts posting raises " + G.money(rate) + " for " + d.cause + ": ",
-      "we're all on Sttar now, 5 pics a day with the chapter. join us: ",
-      "help us raise money for " + d.cause + ", just download Sttar and post your day: "
+      "we're all on Sttar now, five pics a day with the chapter. join us: ",
+      "help us raise money for " + d.cause + ". download Sttar and post your day: "
     ] : [
-      "we're all posting our day on Sttar now. 5 pics a day, just friends. join me: ",
+      "we're all posting our day on Sttar now. five pics a day, just friends. join me: ",
       "this is what my day actually looked like. i post it on Sttar, add me: ",
       "download Sttar and follow me, i want to see your day: "
     ];
     caps.forEach(function (t) {
-      var b = G.el("button", "caption"), tag = G.el("em", "", "copy");
+      var b = G.el("button", "caption"), tag = G.el("em", "", "Copy");
       b.type = "button"; b.appendChild(G.el("span", "", t + shown)); b.appendChild(tag);
-      b.onclick = function () { G.copy(t + d.link, tag, "copy"); };
+      b.onclick = function () { G.copy(t + d.link, tag, "Copy"); };
       $("kit").appendChild(b);
     });
 
-    // QR
     $("qrbtn").onclick = function () {
-      var box = $("qrbox"); box.hidden = !box.hidden;
+      var box = $("qrbox"); box.hidden = !box.hidden; $("qrbtn").setAttribute("aria-expanded", String(!box.hidden));
       if (box.hidden || box.dataset.done) return;
       var qr = qrcode(0, "M"); qr.addData(d.link); qr.make();
       var n = qr.getModuleCount(), cv = $("qr"), cx = cv.getContext("2d"), cell = Math.floor(cv.width / (n + 8)), off = Math.floor((cv.width - cell * n) / 2);
-      cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height); cx.fillStyle = "#121212";
+      var css = getComputedStyle(document.documentElement);
+      cx.fillStyle = css.getPropertyValue("--color-paper-2").trim() || "white"; cx.fillRect(0, 0, cv.width, cv.height);
+      cx.fillStyle = css.getPropertyValue("--color-ink").trim() || "black";
       for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) cx.fillRect(off + c * cell, off + r * cell, cell, cell);
       $("qrsave").href = cv.toDataURL("image/png"); box.dataset.done = "1";
     };
 
-    // friends
-    var box = $("friends"); box.textContent = "";
+    var box = $("friends");
     if (!d.friends.length) {
-      var e = G.el("div", "empty"); e.appendChild(G.el("b", "", "No friends yet")); e.appendChild(document.createTextNode("Share your link. Friends show up here within an hour of joining."));
-      box.appendChild(e);
+      var e = G.el("div", "empty"); e.appendChild(G.el("b", "", "Nobody yet"));
+      e.appendChild(document.createTextNode("Share your link. Friends show up here within an hour of joining.")); box.appendChild(e);
     }
     var order = { "in progress": 0, "qualified": 1, "expired": 2 };
     d.friends.sort(function (a, b) { return order[a.status] - order[b.status] || b.signed_up - a.signed_up; }).forEach(function (f) {
-      var row = G.el("div", "friend"), left = G.el("div");
-      left.style.minWidth = "0";
-      left.appendChild(G.el("div", "who", "@" + f.friend));
-      row.appendChild(left);
+      var row = G.el("div", "friend"), left = G.el("div"); left.style.minWidth = "0";
+      left.appendChild(G.el("div", "name", "@" + f.friend)); row.appendChild(left);
       if (f.status === "in progress") {
-        left.appendChild(G.el("div", "meta", f.shots + " of " + p.shots + " Daily Shots · " + (f.days_left > 0 ? f.days_left + (f.days_left === 1 ? " day left" : " days left") : "last day")));
-        var nudge = G.el("button", "linkish", "send a nudge"); nudge.type = "button"; nudge.style.marginTop = "4px";
-        nudge.onclick = function () {
-          var text = "post your Sttar of the Day today, i want to see it";
-          if (navigator.share) navigator.share({ text: text }).catch(function () {}); else G.copy(text, nudge, "send a nudge");
-        };
+        left.appendChild(G.el("div", "meta", f.shots + " of " + p.shots + " Daily Shots, " + (f.days_left > 0 ? f.days_left + (f.days_left === 1 ? " day left" : " days left") : "last day")));
+        var nudge = G.el("button", "textlink", "Send a nudge"); nudge.type = "button";
+        nudge.onclick = function () { var t = "post your Sttar of the Day today, i want to see it"; if (navigator.share) navigator.share({ text: t }).catch(function () {}); else G.copy(t, nudge, "Send a nudge"); };
         left.appendChild(nudge);
-        var dots = G.el("div", "dots");
-        for (var i = 0; i < p.shots; i++) dots.appendChild(G.el("i", i < f.shots ? "on" : ""));
-        row.appendChild(dots);
+        var bar = G.el("div", "progress"); bar.setAttribute("aria-hidden", "true");
+        for (var i = 0; i < p.shots; i++) bar.appendChild(G.el("i", i < f.shots ? "on" : ""));
+        row.appendChild(bar);
       } else if (f.status === "qualified") {
-        row.appendChild(G.el("span", "tag", p.showEarnings && rate ? "+" + G.money(rate) : "qualified"));
+        row.appendChild(G.el("span", "state", p.showEarnings && rate ? "+" + G.money(rate) : "Qualified"));
       } else {
-        left.appendChild(G.el("div", "meta", "didn't post " + p.shots + " in time"));
-        row.appendChild(G.el("span", "tag off", "missed"));
+        left.appendChild(G.el("div", "meta", "Did not post " + p.shots + " in time"));
+        row.appendChild(G.el("span", "state off", "Missed"));
       }
       box.appendChild(row);
     });
 
-    // leaderboard
     if (d.leaderboard && d.leaderboard.top.length) {
-      $("lbcard").hidden = false;
-      $("lbtitle").textContent = group ? "Top groups this month" : "Top this month";
+      $("lbcard").hidden = false; $("lbtitle").textContent = group ? "Top groups this month" : "Top this month";
       d.leaderboard.top.forEach(function (b) { $("lb").appendChild(G.lbRow(b.rank, group ? b.name : "@" + b.username, b.qualified, b.joined, b.you)); });
-      if (d.leaderboard.rank > 5) { $("lbme").hidden = false; $("lbme").textContent = "You're #" + d.leaderboard.rank + " of " + d.leaderboard.of + " this month."; }
+      if (d.leaderboard.rank > 5) { $("lbme").hidden = false; $("lbme").textContent = "You are number " + d.leaderboard.rank + " of " + d.leaderboard.of + " this month."; }
     }
     $("updated").textContent = G.ago(d.updated);
-  }).catch(function () { show("bad"); $("badmsg").textContent = "Couldn't load your stats. Check your signal and reload."; });
+  }).catch(function () { show("bad"); $("badmsg").textContent = "Could not load your stats. Check your signal and reload."; });
 })();
 </script>
-
 </body>
 </html>

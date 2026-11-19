@@ -47,14 +47,11 @@ window.GROW = (function () {
     document.querySelectorAll("[data-if-gcap]").forEach(function (e) { e.hidden = !(p.groupCap > 0); });
     document.querySelectorAll("[data-if-pay]").forEach(function (e) { e.hidden = !(p.showEarnings && p.rate > 0); });
   }
+  // one row of a leaderboard table: rank, name, qualified, joined
   function lbRow(rank, name, qualified, joined, you) {
-    var row = el("div", "lb-row" + (you ? " you" : ""));
-    row.appendChild(el("span", "lb-rank", rank));
-    row.appendChild(el("span", "lb-name", name + (you ? " (you)" : "")));
-    var num = el("span", "lb-num");
-    num.appendChild(el("b", "", qualified)); num.appendChild(document.createTextNode(" qualified · " + joined + " joined"));
-    row.appendChild(num);
-    return row;
+    var tr = el("tr", you ? "you" : "");
+    [rank, name + (you ? " (you)" : ""), qualified, joined].forEach(function (v) { tr.appendChild(el("td", "", v)); });
+    return tr;
   }
   return { get: get, post: post, save: save, load: load, forget: forget, money: money, ago: ago, el: el, copy: copy, fill: fill, lbRow: lbRow };
 })();

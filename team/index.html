@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Team · Sttar Ambassadors</title>
+<title>Team, Sttar ambassadors</title>
 <meta name="description" content="Team overview.">
 <link rel="canonical" href="https://grow.sttar.com/team/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sttar">
 <meta property="og:url" content="https://grow.sttar.com/team/">
-<meta property="og:title" content="Team · Sttar Ambassadors">
+<meta property="og:title" content="Team, Sttar ambassadors">
 <meta property="og:description" content="Team overview.">
 <meta property="og:image" content="https://sttar.com/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,55 +18,54 @@
 <meta name="theme-color" content="#F7F1EA">
 <link rel="icon" href="https://sttar.com/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="https://sttar.com/assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="/assets/grow.css">
+<link rel="preload" href="../assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body data-page="team" data-footer="mini">
-<section class="section" style="padding-top:clamp(32px,5vw,56px)"><div class="container">
-<section id="gate" hidden>
-    <h1 class="h-lg">team overview</h1>
-    <form class="card" id="keyform" style="margin-top:20px;max-width:420px">
-      <label for="key">Team key</label>
-      <input id="key" type="text" autocapitalize="none" autocorrect="off" spellcheck="false">
-      <button class="btn" type="submit" style="margin-top:12px">open</button>
-      <p class="msg err" id="keymsg"></p>
-    </form>
+<main class="sec-s">
+<div class="container">
+  <section id="gate" hidden>
+    <div class="grid12 form-grid">
+      <div class="form-intro"><h1>team overview.</h1><p class="lead">For the Sttar team. Enter the key from the Config tab.</p></div>
+      <form class="form-card" id="keyform" novalidate>
+        <div class="field"><label for="key">Team key</label><input id="key" name="key" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off"></div>
+        <button class="btn mt-lg" type="submit">Open</button>
+        <p class="msg err" id="keymsg" role="status"></p>
+      </form>
+    </div>
   </section>
 
   <section id="page" hidden>
-    <span class="eyebrow">Team</span><h1 class="h-lg">ambassadors &amp; groups</h1>
-    <p class="muted" style="margin:8px 0 0">Updated <span id="updated">…</span>. Refreshes on its own every hour.</p>
-
-    <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
-      <div class="tile"><div class="n" id="t1">–</div><div class="l">ambassadors + groups</div></div>
-      <div class="tile"><div class="n" id="t0">–</div><div class="l">link visits</div></div>
-      <div class="tile"><div class="n" id="t2">–</div><div class="l">friends joined</div></div>
-      <div class="tile"><div class="n" id="t3">–</div><div class="l">in progress</div></div>
-      <div class="tile"><div class="n" id="t4">–</div><div class="l">qualified</div></div>
-      <div class="tile"><div class="n" id="t5">–</div><div class="l">owed now</div></div>
+    <div class="dash-head">
+      <div><h1>ambassadors and groups</h1><p class="who">Updated <span id="updated">recently</span>. Refreshes on its own every hour.</p></div>
+      <a class="btn-quiet" id="sheet" target="_blank" rel="noopener" href="#">Open the sheet</a>
     </div>
-
+    <div class="tiles">
+      <div><b id="t1">0</b><span>ambassadors and groups</span></div>
+      <div><b id="t0">0</b><span>link visits</span></div>
+      <div><b id="t2">0</b><span>friends joined</span></div>
+      <div><b id="t4">0</b><span>qualified</span></div>
+    </div>
+    <p class="small muted mt-lg"><span id="t3">0</span> in progress, <span id="t5">$0</span> owed now.</p>
     <div class="toolbar">
-      <div class="at" style="flex:1;min-width:200px"><span>@</span><input id="add" type="text" placeholder="add an ambassador by username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
-      <button class="btn sm" id="addbtn" type="button">add</button>
-      <button class="btn sm ghost" id="refresh" type="button">refresh now</button>
-      <a class="btn sm ghost" id="sheet" target="_blank" rel="noopener">open sheet</a>
+      <div class="at"><span aria-hidden="true">@</span><input id="add" type="text" aria-label="Add an ambassador by username" placeholder="add an ambassador by username" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+      <button class="btn" id="addbtn" type="button">Add</button>
+      <button class="btn-quiet" id="refresh" type="button">Refresh now</button>
     </div>
-    <p class="msg" id="barmsg"></p>
-
-    <div class="card scroll" style="padding:6px 10px;margin-top:6px">
-      <table>
-        <thead><tr><th>name</th><th>visits</th><th>joined</th><th>in progress</th><th>qualified</th><th>this month</th><th>earned</th><th>paid</th><th>owed</th><th>pay to</th></tr></thead>
+    <p class="msg" id="barmsg" role="status"></p>
+    <div class="scroll mt-lg">
+      <table class="team">
+        <thead><tr><th scope="col">Name</th><th scope="col">Visits</th><th scope="col">Joined</th><th scope="col">In progress</th><th scope="col">Qualified</th><th scope="col">This month</th><th scope="col">Earned</th><th scope="col">Paid</th><th scope="col">Owed</th><th scope="col">Pay to</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
-    <p class="small muted" style="margin-top:14px">Tap a creator to see their friends. After you send someone their money, open their row and tap "mark paid" (it logs to the Payouts tab in the sheet). Rates, the monthly cap and pausing sign-ups are in the Config tab.</p>
+    <p class="small muted mt-xl">Tap a row to see their friends. After you pay someone, open their row and tap Mark paid. Rates, caps and sign-ups are in the Config tab.</p>
   </section>
-</div></section>
-<script src="/assets/grow.js"></script>
-<script src="/assets/site.js"></script>
+</div>
+</main>
+<script src="../assets/grow.js"></script>
+<script src="../assets/site.js"></script>
 <script>
 (function () {
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
@@ -77,11 +76,11 @@
   function load() {
     if (!k) { $("gate").hidden = false; return; }
     G.get({ a: "team", k: k }).then(function (d) {
-      if (!d || !d.ok) { G.forget("grow_team"); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "Couldn't open."; return; }
+      if (!d || !d.ok) { G.forget("grow_team"); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "Could not open."; return; }
       G.save("grow_team", k);
       $("gate").hidden = true; $("page").hidden = false;
       render(d);
-    }).catch(function () { $("gate").hidden = false; $("keymsg").textContent = "Couldn't connect. Reload to try again."; });
+    }).catch(function () { $("gate").hidden = false; $("keymsg").textContent = "Could not connect. Reload to try again."; });
   }
 
   function render(d) {
@@ -94,33 +93,33 @@
     var body = $("rows"); body.textContent = "";
     if (!d.creators.length) {
       var tr = G.el("tr"), td = G.el("td", "muted", "Nobody yet. Share grow.sttar.com or add someone above.");
-      td.colSpan = 10; td.style.textAlign = "left"; tr.appendChild(td); body.appendChild(tr);
+      td.colSpan = 10; tr.appendChild(td); body.appendChild(tr);
     }
     d.creators.sort(function (a, b) { return b.qualified - a.qualified || b.signups - a.signups || b.joined - a.joined; }).forEach(function (c) {
       var tr = G.el("tr", "c");
-      [ (c.type === "group" ? c.name : "@" + c.username), c.visits || 0, c.signups, c.in_progress, c.qualified, G.money(c.earned_this_month), G.money(c.earned), G.money(c.paid), G.money(c.owed), c.payout || "–" ]
+      [ (c.type === "group" ? c.name : "@" + c.username), c.visits || 0, c.signups, c.in_progress, c.qualified, G.money(c.earned_this_month), G.money(c.earned), G.money(c.paid), G.money(c.owed), c.payout || "none" ]
         .forEach(function (v) { tr.appendChild(G.el("td", "", v)); });
-      if (c.type === "group") { var pl = G.el("span", "pill", "group"); tr.firstChild.appendChild(pl); }
+      if (c.type === "group") tr.firstChild.appendChild(G.el("span", "kind", " (group)"));
       var det = G.el("tr", "d"), cell = G.el("td"); cell.colSpan = 10; det.hidden = true; det.appendChild(cell);
-      var meta = G.el("div", "small muted", (c.type === "group" ? "Group account @" + c.username + " · raising for " + c.cause + (c.contact ? " · contact: " + c.contact : "") + " · " : "") + "Joined " + new Date(c.joined).toLocaleDateString() + " · " + (c.added_by === "team" ? "added by team" : "signed up") + " · ");
+      var meta = G.el("div", "small muted", (c.type === "group" ? "Group account @" + c.username + ", raising for " + c.cause + (c.contact ? ". Contact: " + c.contact : "") + ". " : "") + "Joined " + new Date(c.joined).toLocaleDateString() + (c.added_by === "team" ? ", added by the team. " : ". ") + "Link: ");
       var a = G.el("a", "", c.link.replace(/^https?:\/\//, "")); a.href = c.link; a.target = "_blank"; a.rel = "noopener"; meta.appendChild(a);
       cell.appendChild(meta);
       if (!c.friends.length) cell.appendChild(G.el("div", "small", "No friends yet."));
       c.friends.sort(function (x, y) { return y.signed_up - x.signed_up; }).forEach(function (f) {
-        var line = "@" + f.friend + " · joined " + new Date(f.signed_up).toLocaleDateString() + " · " +
+        var line = "@" + f.friend + ", joined " + new Date(f.signed_up).toLocaleDateString() + ", " +
           (f.status === "in progress" ? f.shots + "/" + p.shots + " shots, " + f.days_left + "d left" : f.status === "expired" ? "missed" : "qualified");
-        var div = G.el("div", "small", line); div.style.marginTop = "6px"; cell.appendChild(div);
+        cell.appendChild(G.el("div", "small mt-xs", line));
       });
       if (c.owed > 0) {
-        var pay = G.el("button", "btn sm", "mark " + G.money(c.owed) + " paid"); pay.type = "button"; pay.style.marginTop = "12px";
+        var pay = G.el("button", "btn mt-lg", "Mark " + G.money(c.owed) + " paid"); pay.type = "button";
         pay.onclick = function (ev) {
           ev.stopPropagation();
-          if (!pay.dataset.sure) { pay.dataset.sure = "1"; pay.textContent = "tap again to confirm " + G.money(c.owed) + " to @" + c.username; return; }
-          pay.disabled = true; pay.textContent = "saving…";
+          if (!pay.dataset.sure) { pay.dataset.sure = "1"; pay.textContent = "Tap again to confirm " + G.money(c.owed) + " to @" + c.username; return; }
+          pay.disabled = true; pay.textContent = "Saving";
           G.post({ a: "pay", k: k, username: c.username, amount: c.owed }).then(function (r) {
             if (r && r.ok) return load();
-            pay.disabled = false; pay.dataset.sure = ""; pay.textContent = (r && r.error) || "failed, try again";
-          }).catch(function () { pay.disabled = false; pay.dataset.sure = ""; pay.textContent = "couldn't connect, try again"; });
+            pay.disabled = false; pay.dataset.sure = ""; pay.textContent = (r && r.error) || "Failed, try again";
+          }).catch(function () { pay.disabled = false; pay.dataset.sure = ""; pay.textContent = "Could not connect, try again"; });
         };
         cell.appendChild(pay);
       }
@@ -132,24 +131,24 @@
   $("addbtn").addEventListener("click", function () {
     var u = $("add").value.trim().replace(/^@/, ""), m = $("barmsg"), b = $("addbtn");
     if (!u) return;
-    b.disabled = true; m.className = "msg"; m.textContent = "Adding…";
+    b.disabled = true; m.className = "msg"; m.textContent = "Adding";
     G.post({ a: "add", k: k, username: u }).then(function (r) {
       b.disabled = false;
-      if (!r || !r.ok) { m.className = "msg err"; m.textContent = (r && r.error) || "Couldn't add."; return; }
+      if (!r || !r.ok) { m.className = "msg err"; m.textContent = (r && r.error) || "Could not add."; return; }
       $("add").value = ""; m.textContent = "";
       m.appendChild(document.createTextNode("Added @" + r.username + ". Send them their stats page: "));
       var a = G.el("a", "", r.stats.replace(/^https?:\/\//, "")); a.href = r.stats; m.appendChild(a);
       G.get({ a: "team", k: k }).then(function (d) { if (d && d.ok) render(d); });
-    }).catch(function () { b.disabled = false; m.className = "msg err"; m.textContent = "Couldn't connect."; });
+    }).catch(function () { b.disabled = false; m.className = "msg err"; m.textContent = "Could not connect."; });
   });
 
   $("refresh").addEventListener("click", function () {
-    var b = $("refresh"), m = $("barmsg"); b.disabled = true; b.textContent = "refreshing…"; m.className = "msg"; m.textContent = "";
+    var b = $("refresh"), m = $("barmsg"); b.disabled = true; b.textContent = "Refreshing"; m.className = "msg"; m.textContent = "";
     G.post({ a: "refresh", k: k }).then(function (r) {
-      b.disabled = false; b.textContent = "refresh now";
+      b.disabled = false; b.textContent = "Refresh now";
       if (!r || !r.ok) { m.className = "msg err"; m.textContent = (r && r.error) || "Refresh failed. Check last_error in the Config tab."; return; }
       load();
-    }).catch(function () { b.disabled = false; b.textContent = "refresh now"; m.className = "msg err"; m.textContent = "Couldn't connect."; });
+    }).catch(function () { b.disabled = false; b.textContent = "Refresh now"; m.className = "msg err"; m.textContent = "Could not connect."; });
   });
 
   load();
