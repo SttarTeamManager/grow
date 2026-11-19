@@ -32,7 +32,7 @@
         <li>Live stats on every friend who joins</li>
         <li>Paid monthly by Venmo or Zelle</li>
       </ul>
-      <p class="small muted mt-xl">Already joined? <a href="/me/">Open your stats</a>. New to Sttar? <a href="https://sttar.com">Get the app</a> first.</p>
+      <p class="small muted mt-xl" id="already">Already joined? <a href="/me/">Log in</a>. New to Sttar? <a href="https://sttar.com">Get the app</a> first.</p>
     </div>
 
     <form class="form-card" id="form" novalidate>
@@ -86,6 +86,9 @@
     $("fine").lastChild.textContent = g ? ". Your group's name can appear on the leaderboard." : ". Your username can appear on the leaderboard.";
     $("msg").textContent = "";
   }
+  var w = G.me();
+  if (w) { var a = $("already"); a.className = "small mt-xl"; a.innerHTML = ""; a.append("You're logged in" + (w.user ? " as @" + w.user : "") + ". ");
+    var l = G.el("a", "", "Open my stats"); l.href = "/me/"; a.append(l, ". Not you? "); var o = G.el("button", "textlink", "Log out"); o.type = "button"; o.onclick = G.logout; a.append(o); }
   $("tab-person").onclick = function () { setType("person"); };
   $("tab-group").onclick = function () { setType("group"); };
   setType(/[?&]group\b/.test(location.search) ? "group" : "person");

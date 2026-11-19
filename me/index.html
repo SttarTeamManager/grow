@@ -28,14 +28,14 @@
 <section class="sec-s" id="signin" hidden>
   <div class="container grid12 form-grid">
     <div class="form-intro">
-      <h1>see how your link is doing.</h1>
-      <p class="lead">Sign in with the Sttar account you joined with. Groups use the account their link opens.</p>
+      <h1>log in to see your stats.</h1>
+      <p class="lead">Log in with the Sttar account you joined with. Groups use the account their link opens.</p>
       <p class="small muted mt-xl">Not in yet? <a href="/signup/">Join here</a>.</p>
     </div>
     <form class="form-card" id="form" novalidate>
       <div class="field"><label for="u">Sttar username</label><div class="at"><span aria-hidden="true">@</span><input id="u" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></div></div>
       <div class="field"><label for="e">Email on that Sttar account</label><input id="e" name="email" type="email" autocomplete="email" autocapitalize="none"></div>
-      <button class="btn mt-lg" id="go" type="submit">Open my stats</button>
+      <button class="btn mt-lg" id="go" type="submit">Log in</button>
       <p class="msg" id="msg" role="status"></p>
     </form>
   </div>
@@ -96,8 +96,14 @@
             <div><span>Paid out</span><b id="paid">$0</b></div>
           </div>
           <div class="field mt-lg">
-            <label for="payout" id="paylabel">Where we pay you, Venmo or Zelle</label>
-            <div class="row"><input id="payout" name="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" placeholder="@your-venmo"><button class="btn" id="savepay" type="button">Save</button></div>
+            <p class="label" id="paylabel">How we pay you</p>
+            <div class="tabs paytabs" role="radiogroup" aria-labelledby="paylabel">
+              <button type="button" role="radio" id="pm-venmo" aria-checked="true" aria-selected="true">Venmo</button>
+              <button type="button" role="radio" id="pm-zelle" aria-checked="false" aria-selected="false">Zelle</button>
+            </div>
+            <label for="payout" id="payfor">Venmo username</label>
+            <div class="row"><input id="payout" name="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@your-venmo"><button class="btn" id="savepay" type="button">Save</button></div>
+            <span class="hint" id="payhint" role="status"></span>
           </div>
         </div>
 
@@ -108,7 +114,7 @@
         </div>
       </div>
     </div>
-    <p class="small muted mt-2xl">Updated <span id="updated">recently</span>. Numbers refresh every hour. <button class="textlink" id="out" type="button">Sign out</button></p>
+    <p class="small muted mt-2xl">Updated <span id="updated">recently</span>. Numbers refresh every hour. <button class="textlink" id="out" type="button">Log out</button></p>
   </div>
 </section>
 
@@ -116,7 +122,7 @@
   <div class="container">
     <h1>link not found.</h1>
     <p class="lead mt-lg" id="badmsg">This stats link is not valid.</p>
-    <div class="actions mt-xl"><a class="btn" href="/me/">Sign in</a></div>
+    <div class="actions mt-xl"><a class="btn" href="/me/">Log in</a></div>
   </div>
 </section>
 </main>
@@ -144,12 +150,12 @@
     }).catch(function () { msg.textContent = "Could not connect. Try again."; go.disabled = false; go.textContent = "Open my stats"; });
   });
   if (!k) { show("signin"); return; }
-  $("out").addEventListener("click", function () { G.forget("grow_k"); location.href = "/me/"; });
+  $("out").addEventListener("click", function () { G.logout(); });
 
   show("dash");
   G.get({ a: "me", k: k }).then(function (d) {
-    if (!d || !d.ok) { G.forget("grow_k"); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
-    G.save("grow_k", k);
+    if (!d || !d.ok) { ["grow_k", "grow_name", "grow_user", "grow_type"].forEach(G.forget); if (window.growNav) window.growNav(); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
+    G.save("grow_k", k); G.remember(d); if (window.growNav) window.growNav();
     var p = d.program, group = d.type === "group", shown = d.link.replace(/^https?:\/\//, "");
     var rate = group ? (p.groupRate || p.rate) : p.rate, cap = group ? p.groupCap : p.cap;
     G.fill(p);
@@ -171,15 +177,39 @@
 
     if (p.showEarnings) {
       $("moneycard").hidden = false;
-      if (group) { $("moneytitle").textContent = "Raised for " + d.cause; $("owedlabel").textContent = "Waiting to be sent"; $("paylabel").textContent = "Where we send it, Venmo or Zelle"; }
+      if (group) { $("moneytitle").textContent = "Raised for " + d.cause; $("owedlabel").textContent = "Waiting to be sent"; $("paylabel").textContent = "How we send it"; }
       $("owed").textContent = G.money(d.owed); $("month").textContent = G.money(d.earned_this_month);
       $("earned").textContent = G.money(d.earned); $("paid").textContent = G.money(d.paid);
       $("monthlabel").textContent = cap > 0 ? "This month, out of " + G.money(cap) : "This month";
-      $("payout").value = d.payout || "";
+      // payout is saved as one line the payout sheet can read: "Venmo @name" or "Zelle phone-or-email"
+      var method = "venmo", saved = String(d.payout || "").trim(), m = saved.match(/^(venmo|zelle)\b[:\s-]*(.*)$/i);
+      var handle = m ? m[2] : saved;
+      if (m) method = m[1].toLowerCase(); else if (saved && saved[0] !== "@" && (/\S+@\S+\.\S+/.test(saved) || saved.replace(/\D/g, "").length >= 10)) method = "zelle";
+      function setMethod(x) {
+        method = x; var z = x === "zelle";
+        [["pm-venmo", !z], ["pm-zelle", z]].forEach(function (b) { $(b[0]).setAttribute("aria-checked", String(b[1])); $(b[0]).setAttribute("aria-selected", String(b[1])); });
+        $("payfor").textContent = z ? "Phone number or email on your Zelle" : "Venmo username";
+        $("payout").placeholder = z ? "(555) 123-4567 or you@email.com" : "@your-venmo";
+        $("payout").inputMode = z ? "email" : "text";
+        $("payhint").className = "hint"; $("payhint").textContent = "";
+      }
+      $("pm-venmo").onclick = function () { if (method !== "venmo") { $("payout").value = ""; setMethod("venmo"); $("payout").focus(); } };
+      $("pm-zelle").onclick = function () { if (method !== "zelle") { $("payout").value = ""; setMethod("zelle"); $("payout").focus(); } };
+      setMethod(method);
+      $("payout").value = handle;
+      if (saved) $("payhint").textContent = "We'll send it to " + (method === "zelle" ? "Zelle " : "Venmo ") + handle + ".";
       $("savepay").onclick = function () {
-        var b = $("savepay"); b.disabled = true;
-        G.post({ a: "payout", k: k, payout: $("payout").value }).then(function (r) {
+        var v = $("payout").value.trim(), hint = $("payhint"), b = $("savepay"), bad = "";
+        if (method === "venmo") {
+          v = v.replace(/^@+/, "");
+          if (!/^[A-Za-z0-9_-]{3,30}$/.test(v)) bad = "Enter your Venmo username, like @your-venmo.";
+          else v = "@" + v;
+        } else if (!(/^\S+@\S+\.\S+$/.test(v) || v.replace(/\D/g, "").length >= 10)) bad = "Enter the phone number or email your Zelle uses.";
+        if (bad) { hint.className = "hint err"; hint.textContent = bad; $("payout").focus(); return; }
+        b.disabled = true; hint.className = "hint"; hint.textContent = "";
+        G.post({ a: "payout", k: k, payout: (method === "zelle" ? "Zelle " : "Venmo ") + v }).then(function (r) {
           b.disabled = false; b.textContent = r && r.ok ? "Saved" : "Retry"; setTimeout(function () { b.textContent = "Save"; }, 1600);
+          if (r && r.ok) { $("payout").value = v; hint.textContent = "We'll send it to " + (method === "zelle" ? "Zelle " : "Venmo ") + v + "."; }
         }).catch(function () { b.disabled = false; b.textContent = "Retry"; });
       };
     }

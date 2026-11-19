@@ -31,7 +31,7 @@
         <button type="button" role="tab" id="t-people" aria-selected="true">Ambassadors</button>
         <button type="button" role="tab" id="t-groups" aria-selected="false">Groups</button>
       </div>
-      <a class="btn" href="/signup/" id="cta">Get on the board</a>
+      <a class="btn" href="/signup/" id="cta" data-cta>Get on the board</a>
     </div>
     <div class="rows-body">
       <table class="board"><thead><tr><th scope="col">Rank</th><th scope="col" id="col">Ambassador</th><th scope="col">Qualified</th><th scope="col">Joined</th></tr></thead><tbody id="board"></tbody></table>
@@ -49,7 +49,7 @@
     var g = which === "groups";
     $("t-people").setAttribute("aria-selected", String(!g)); $("t-groups").setAttribute("aria-selected", String(g));
     $("col").textContent = g ? "Group" : "Ambassador";
-    $("cta").href = g ? "/signup/?group" : "/signup/"; $("cta").textContent = g ? "Sign up your group" : "Get on the board";
+    if ($("cta")) { $("cta").href = g ? "/signup/?group" : "/signup/"; $("cta").textContent = g ? "Sign up your group" : "Get on the board"; }
     var list = data[which]; $("board").textContent = "";
     $("empty").hidden = list.length > 0; $("emptytext").textContent = g ? "Be the first group on the board." : "Be the first name on the board.";
     list.forEach(function (b) { $("board").appendChild(G.lbRow(b.rank, g ? b.name : "@" + b.username, b.qualified, b.joined)); });
