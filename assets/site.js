@@ -91,8 +91,7 @@
 
   document.querySelectorAll("[data-deck]").forEach(function (deck) {
     var cards = [].slice.call(deck.querySelectorAll(".card"));
-    var order = cards.slice(), timer = null, paused = false, hover = false, seen = true, flip = false;
-    var btn = document.querySelector('[data-pause="' + deck.id + '"]');
+    var order = cards.slice(), timer = null, hover = false, seen = true, flip = false;
     function layout() {
       order.forEach(function (c, i) { c.style.setProperty("--i", i); c.style.zIndex = String(order.length - i); c.setAttribute("aria-hidden", i === 0 ? "false" : "true"); });
     }
@@ -105,38 +104,20 @@
         order[0].classList.remove("dev"); void order[0].offsetWidth; order[0].classList.add("dev");
       }, 520);
     }
-    function tick() { clearInterval(timer); timer = null; if (!still && !paused && !hover && seen) timer = setInterval(deal, 3400); }
+    function tick() { clearInterval(timer); timer = null; if (!still && !hover && seen) timer = setInterval(deal, 3400); }
     layout(); order[0].classList.add("dev");
     deck.addEventListener("click", function () { deal(); tick(); });
     deck.addEventListener("mouseenter", function () { hover = true; tick(); });
     deck.addEventListener("mouseleave", function () { hover = false; tick(); });
-    if (btn) {
-      if (still) btn.hidden = true;
-      btn.addEventListener("click", function () { paused = !paused; btn.textContent = paused ? "Play photos" : "Pause photos"; btn.setAttribute("aria-pressed", String(paused)); tick(); });
-    }
     if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { seen = e[0].isIntersecting; tick(); }).observe(deck);
     tick();
   });
 
-  var wall = document.getElementById("wall"), wb = document.querySelector('[data-pause="wall"]');
-  if (wall && wb) {
-    wb.addEventListener("click", function () {
-      var p = wall.classList.toggle("paused");
-      wb.textContent = p ? "Play photos" : "Pause photos"; wb.setAttribute("aria-pressed", String(p));
-    });
+  var wall = document.getElementById("wall");
+  if (wall) {
     wall.addEventListener("mouseenter", function () { wall.classList.add("hovering"); });
     if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { wall.classList.toggle("offscreen", !e[0].isIntersecting); }).observe(wall);
   }
-
-  document.querySelectorAll("[data-rail]").forEach(function (rail) {
-    var btn = document.querySelector('[data-pause="' + rail.id + '"]');
-    if (!btn) return;
-    if (still) { btn.hidden = true; return; }
-    btn.addEventListener("click", function () {
-      var p = rail.classList.toggle("paused");
-      btn.textContent = p ? "Play photos" : "Pause photos"; btn.setAttribute("aria-pressed", String(p));
-    });
-  });
 
   var rev = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !still) {
