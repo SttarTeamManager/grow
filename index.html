@@ -77,15 +77,19 @@
 <section class="sec well" id="month">
   <div class="container grid12 month">
     <div class="month-control">
-      <h2>slide to see your month.</h2>
-      <label class="mt-xl" for="calc">Friends who qualify this month: <b id="calc-n">10</b></label>
-      <input class="range" id="calc" type="range" min="1" max="100" value="10">
-      <div class="range-ends"><span>1</span><span>100</span></div>
+      <h2>what could your month look like?</h2>
+      <p class="lead mt-lg">Pick who you'd send your link to.</p>
+      <div class="picks mt-xl" id="picks" role="group" aria-label="Who you'd share your link with">
+        <button type="button" class="pick" data-n="15" data-k="4" aria-pressed="false"><b>Your group chat</b><span>15 friends</span></button>
+        <button type="button" class="pick" data-n="40" data-k="7" aria-pressed="true"><b>Your floor or dorm</b><span>40 friends</span></button>
+        <button type="button" class="pick" data-n="100" data-k="9" aria-pressed="false"><b>Your whole chapter</b><span>100 friends</span></button>
+      </div>
     </div>
     <div class="month-out">
       <div class="calc-pile" id="calc-pile" aria-hidden="true"></div>
-      <div class="figure-xl" id="calc-out" aria-live="polite">$20</div>
+      <div class="figure-xl" id="calc-out" aria-live="polite">$80</div>
       <p id="calc-note">Paid monthly by Venmo or Zelle. No limit.</p>
+      <div class="actions mt-lg"><a class="btn" href="/signup/">Become an ambassador</a></div>
     </div>
   </div>
 </section>
@@ -174,13 +178,13 @@
 (function () {
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
   var P = { rate: 2, cap: 0, groupRate: 2, shots: 3, days: 7, showEarnings: true };
-    function calc() {
-    var n = Number($("calc").value), amt = n * P.rate;
+  var cur = document.querySelector('.pick[aria-pressed="true"]');
+  function calc() {
+    var n = Number(cur.dataset.n), amt = n * P.rate;
     if (P.cap > 0) amt = Math.min(amt, P.cap);
-    $("calc-n").textContent = n;
-    pile(Math.min(n, 9));
+    pile(Number(cur.dataset.k));
     $("calc-out").textContent = G.money(amt);
-    $("calc-note").textContent = "Paid monthly by Venmo or Zelle." + (P.cap > 0 ? " Up to " + G.money(P.cap) + " a month." : " No limit.");
+    $("calc-note").textContent = n + " friends who join and post. Paid monthly by Venmo or Zelle." + (P.cap > 0 ? " Up to " + G.money(P.cap) + " a month." : " No limit.");
   }
   var PICS = ["s4", "s3", "s6", "s7", "s1", "s5", "s25", "s12", "s22"], shown = 0;
   function pile(k) {
@@ -188,12 +192,16 @@
     while (shown < k) {
       var f = document.createElement("figure"); f.className = "pp";
       f.style.setProperty("--r", (((shown * 37) % 17) - 8) + "deg"); f.style.setProperty("--k", shown);
-      f.innerHTML = '<img src="assets/img/' + PICS[shown] + '.jpg" alt=""><span>+$2</span>';
+      f.innerHTML = '<img src="assets/img/' + PICS[shown] + '.jpg" alt=""><span>+' + G.money(P.rate) + '</span>';
       box.appendChild(f); shown++;
     }
     while (shown > k) { box.removeChild(box.lastChild); shown--; }
   }
-  $("calc").addEventListener("input", calc);
+  document.querySelectorAll(".pick").forEach(function (b) {
+    b.addEventListener("click", function () {
+      cur.setAttribute("aria-pressed", "false"); b.setAttribute("aria-pressed", "true"); cur = b; calc();
+    });
+  });
   calc();
   G.get({ a: "public" }).then(function (d) {
     if (!d || !d.ok) return;
