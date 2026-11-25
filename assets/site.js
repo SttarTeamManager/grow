@@ -18,16 +18,22 @@
     plus: '<path d="M12 5v14M5 12h14"/>',
     copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
     x: '<path d="M6 6l12 12M18 6 6 18"/>',
-    menu: '<path d="M4 7h16M4 12h16M4 17h10"/>'
+    menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
+    lines: '<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
+    team: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9.5h18M9 9.5V20"/>',
+    sheet: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
+    lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
   };
   function icon(n) { return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + I[n] + "</svg>"; }
   var page = document.body.getAttribute("data-page") || "";
   var G = window.GROW, who = G && G.me();
   var root = document.documentElement;
+  var small = window.matchMedia("(max-width: 60rem)"), mid = window.matchMedia("(max-width: 80rem)");
 
   // one tab: key matches <body data-page>, so the open page gets aria-current
+  function here() { return page === "me" ? "me" + ({ "#share-kit": "-share", "#payout": "-pay" }[location.hash] || "") : page; }
   function tab(key, href, label, ic, ext) {
-    return '<a class="tab" href="' + href + '" data-tip="' + label + '"' + (key && key === page ? ' aria-current="page"' : "") + (ext ? ' target="_blank" rel="noopener"' : "") + ">" +
+    return '<a class="tab" href="' + href + '" data-tip="' + label + '"' + (key && key === here() ? ' aria-current="page"' : "") + (ext ? ' target="_blank" rel="noopener"' : "") + ">" +
       icon(ic) + '<span class="tab-l">' + label + (ext ? '<span class="visually-hidden"> (opens in a new tab)</span>' : "") + "</span>" +
       (ext ? '<span class="tab-ext" aria-hidden="true">&#8599;</span>' : "") + "</a>";
   }
@@ -45,9 +51,11 @@
     who = G && G.me();
     var program = group("the program", [tab("home", "/", "Home", "home"), tab("groups", "/groups/", "Groups", "groups"), tab("leaderboard", "/leaderboard/", "Leaderboard", "podium")]);
     var help = group("help", [tab("faq", "/faq/", "FAQ", "faq"), tab("rules", "/rules/", "Rules", "rules"), tab("", "mailto:hello@sttar.com", "Contact us", "mail"), tab("", "https://sttar.com/download", "Get the app", "phone", true)]);
-    var you, card = "";
+    var you, card = "", team = G && G.load("grow_team"), sheet = G && G.load("grow_sheet");
+    var admin = team ? group("admin", [tab("team", "/team/", "Team overview", "team")].concat(sheet && /^https:\/\//.test(sheet) ? [tab("", sheet, "The Sheet", "sheet", true)] : [])) : "";
+    var teamLink = team ? "" : '<a class="side-team" href="/team/" data-tip="Team login"' + (page === "team" ? ' aria-current="page"' : "") + ">" + icon("lock") + "<span>Team login</span></a>";
     if (who) {
-      you = group("you", [tab("me", "/me/", "My stats", "stats"), tab("", "/me/#share-kit", "Share kit", "send"), tab("", "/me/#moneycard", "Payout", "wallet")]);
+      you = group("you", [tab("me", "/me/#stats", "My stats", "stats"), tab("me-share", "/me/#share-kit", "Share kit", "send"), tab("me-pay", "/me/#payout", "Payout", "wallet")]);
       var link = who.link ? who.link.replace(/^https?:\/\//, "") : "";
       card = '<div class="side-card mine"><div class="side-cap"><span>' + (who.user ? "@" + esc(who.user) + "'s link" : "your link") + "</span>" +
           '<button class="side-out" type="button" data-logout data-tip="Log out">' + icon("logout") + "<span>Log out</span></button></div>" +
@@ -55,7 +63,7 @@
               : '<a class="btn side-cta" href="/me/" data-tip="Get my link">' + icon("stats") + "<span>Get my link</span></a>") + "</div>";
     } else {
       you = group("you", [tab("me", "/me/", "Log in", "login")]);
-      if (page !== "signup") card = '<div class="side-card"><div class="side-fan" aria-hidden="true">' +
+      if (page !== "signup" && !team) card = '<div class="side-card"><div class="side-fan" aria-hidden="true">' +
         '<figure style="--k:0;--r:-9deg"><img src="/assets/img/s4.jpg" alt=""></figure><figure style="--k:1;--r:4deg"><img src="/assets/img/s7.jpg" alt=""></figure><figure style="--k:2;--r:-3deg"><img src="/assets/img/s25.jpg" alt=""></figure>' +
         '<span class="side-pill">+<span data-rate>$2</span></span></div>' +
         '<p class="side-pitch"><b><span data-rate>$2</span> for every friend</b> who joins and posts. No cap.</p>' +
@@ -63,8 +71,9 @@
     }
     side.innerHTML =
       '<div class="side-top"><a class="side-brand" href="/" aria-label="Sttar ambassadors home">' + MARK + '<span class="side-word">Sttar</span><span class="side-tag">ambassadors</span></a>' +
-        '<button class="side-close" type="button" aria-label="Close menu">' + icon("x") + "</button></div>" +
-      '<nav class="side-nav" aria-label="Main">' + (who ? you + program + help : program + you + help) + "</nav>" + card;
+        '<button class="side-toggle" type="button" aria-controls="side">' + icon("lines") + "</button></div>" +
+      '<nav class="side-nav" aria-label="Main">' + admin + (who ? you + program + help : program + you + help) + teamLink + "</nav>" + card;
+    label();
 
     var act = "";
     if (!who && page !== "signup") act = '<a class="btn btn-s" href="/signup/">Join</a>';
@@ -76,8 +85,22 @@
   render();
   window.growNav = render;
 
-  // phones: the same side nav slides in from the left over a scrim
-  var small = window.matchMedia("(max-width: 60rem)");
+  // the three-line button: on phones it closes the drawer; on bigger screens it folds the nav to an icon rail and back
+  // (the choice is kept in grow_side; each page's <head> applies it before the first paint)
+  function rail() { var s = G && G.load("grow_side"); root.classList.toggle("rail", !small.matches && (s ? s === "mini" : mid.matches)); label(); }
+  function label() {
+    var b = side.querySelector(".side-toggle"); if (!b) return;
+    var t = small.matches ? "Close menu" : root.classList.contains("rail") ? "Expand menu" : "Collapse menu";
+    b.setAttribute("aria-label", t); b.setAttribute("data-tip", t);
+    b.setAttribute("aria-expanded", String(small.matches || !root.classList.contains("rail")));
+  }
+  function fold() {
+    G.save("grow_side", root.classList.contains("rail") ? "full" : "mini");
+    var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (document.startViewTransition && !still) document.startViewTransition(rail); else rail();
+  }
+  rail();
+
   function setOpen(open) {
     root.classList.toggle("menu-open", open);
     var b = bar.querySelector(".menu-btn"); b.setAttribute("aria-expanded", String(open));
@@ -88,7 +111,7 @@
   scrim.addEventListener("click", function () { setOpen(false); });
   side.addEventListener("click", function (e) {
     var t = e.target;
-    if (t.closest(".side-close")) { setOpen(false); bar.querySelector(".menu-btn").focus(); return; }
+    if (t.closest(".side-toggle")) { if (small.matches) { setOpen(false); bar.querySelector(".menu-btn").focus(); } else fold(); return; }
     if (t.closest("[data-logout]")) { G.logout(); return; }
     var c = t.closest("[data-copy]");
     if (c && who && who.link) { G.copy(who.link, c.querySelector("span"), "Copy"); return; }
@@ -99,8 +122,8 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && root.classList.contains("menu-open")) { setOpen(false); bar.querySelector(".menu-btn").focus(); }
   });
-  var onChange = function () { if (!small.matches) setOpen(false); };
-  if (small.addEventListener) small.addEventListener("change", onChange); else small.addListener(onChange);
+  var onChange = function () { if (!small.matches) setOpen(false); rail(); };
+  [small, mid].forEach(function (m) { if (m.addEventListener) m.addEventListener("change", onChange); else m.addListener(onChange); });
   var onScroll = function () { bar.classList.toggle("scrolled", window.scrollY > 8); };
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
 

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>!function(d){d.classList.add("js");var s;try{s=localStorage.getItem("grow_side")}catch(e){}if(!matchMedia("(max-width:60rem)").matches&&(s?s==="mini":matchMedia("(max-width:80rem)").matches))d.classList.add("rail")}(document.documentElement)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Team, Sttar ambassadors</title>
 <meta name="description" content="Team overview.">
@@ -27,10 +28,11 @@
 <div class="container">
   <section id="gate" hidden>
     <div class="grid12 form-grid">
-      <div class="form-intro"><h1>team overview.</h1><p class="lead">For the Sttar team. Enter the key from the Config tab.</p></div>
-      <form class="form-card" id="keyform" novalidate>
-        <div class="field"><label for="key">Team key</label><input id="key" name="key" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off"></div>
-        <button class="btn mt-lg" type="submit">Open</button>
+      <div class="form-intro"><h1>team login.</h1><p class="lead">For the Sttar team. Log in once and this browser keeps you in.</p><p class="small muted mt-xl">The key is <b>admin_key</b> in the Config tab of the grow Sheet. Let your browser or password manager save it and it fills in next time.</p></div>
+      <form class="form-card" id="keyform" method="post" action="/team/" novalidate>
+        <input type="text" name="username" value="Sttar team" autocomplete="username" hidden>
+        <div class="field"><label for="key">Team key</label><div class="row"><input id="key" name="password" type="password" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="current-password"><button class="btn-quiet peek" id="peek" type="button" aria-pressed="false">Show</button></div></div>
+        <button class="btn mt-lg" id="keygo" type="submit">Log in</button>
         <p class="msg err" id="keymsg" role="status"></p>
       </form>
     </div>
@@ -39,7 +41,7 @@
   <section id="page" hidden>
     <div class="dash-head">
       <div><h1>ambassadors and groups</h1><p class="who">Updated <span id="updated">recently</span>. Refreshes on its own every hour.</p></div>
-      <a class="btn-quiet" id="sheet" target="_blank" rel="noopener" href="#">Open the sheet</a>
+      <div class="actions"><a class="btn-quiet" id="sheet" target="_blank" rel="noopener" href="#">Open the sheet</a><button class="textlink" id="teamout" type="button">Log out</button></div>
     </div>
     <div class="tiles">
       <div><b id="t1">0</b><span>ambassadors and groups</span></div>
@@ -71,16 +73,28 @@
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
   var k = new URLSearchParams(location.search).get("k") || G.load("grow_team") || "";
 
-  $("keyform").addEventListener("submit", function (e) { e.preventDefault(); k = $("key").value.trim(); load(); });
+  $("keyform").addEventListener("submit", function (e) {
+    e.preventDefault(); k = $("key").value.trim();
+    if (!k) { $("keymsg").textContent = "Enter the team key."; $("key").focus(); return; }
+    $("keygo").disabled = true; $("keygo").textContent = "Checking"; $("keymsg").textContent = ""; load();
+  });
+  $("peek").addEventListener("click", function () {
+    var on = $("key").type === "password"; $("key").type = on ? "text" : "password";
+    $("peek").textContent = on ? "Hide" : "Show"; $("peek").setAttribute("aria-pressed", String(on));
+  });
+  $("teamout").addEventListener("click", function () { G.forget("grow_team"); G.forget("grow_sheet"); location.href = "/team/"; });
+  // a ?k= link logs you in, then the key comes out of the address bar and history
+  if (new URLSearchParams(location.search).get("k") && history.replaceState) history.replaceState(null, "", "/team/");
 
   function load() {
     if (!k) { $("gate").hidden = false; return; }
     G.get({ a: "team", k: k }).then(function (d) {
-      if (!d || !d.ok) { G.forget("grow_team"); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "Could not open."; return; }
-      G.save("grow_team", k);
+      $("keygo").disabled = false; $("keygo").textContent = "Log in";
+      if (!d || !d.ok) { G.forget("grow_team"); G.forget("grow_sheet"); if (window.growNav) window.growNav(); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "That key did not work."; return; }
+      G.save("grow_team", k); if (d.sheet) G.save("grow_sheet", d.sheet); if (window.growNav) window.growNav();
       $("gate").hidden = true; $("page").hidden = false;
       render(d);
-    }).catch(function () { $("gate").hidden = false; $("keymsg").textContent = "Could not connect. Reload to try again."; });
+    }).catch(function () { $("keygo").disabled = false; $("keygo").textContent = "Log in"; $("gate").hidden = false; $("keymsg").textContent = "Could not connect. Reload to try again."; });
   }
 
   function render(d) {

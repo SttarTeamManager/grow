@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>document.documentElement.classList.add("js")</script>
+<script>!function(d){d.classList.add("js");var s;try{s=localStorage.getItem("grow_side")}catch(e){}if(!matchMedia("(max-width:60rem)").matches&&(s?s==="mini":matchMedia("(max-width:80rem)").matches))d.classList.add("rail")}(document.documentElement)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>My stats, Sttar ambassadors</title>
 <meta name="description" content="Track your Sttar invite link.">
@@ -41,7 +41,7 @@
   </div>
 </section>
 
-<section class="sec-s" id="dash" hidden>
+<section class="sec-s" id="dash" data-view="stats" hidden>
   <div class="container">
     <div class="dash-head">
       <div>
@@ -51,66 +51,87 @@
       <button class="btn" id="share" type="button">Share my link</button>
     </div>
 
-    <div class="tiles">
-      <div><b id="n0">0</b><span>link visits</span></div>
-      <div><b id="n1">0</b><span>friends joined</span></div>
-      <div><b id="n2">0</b><span>in progress</span></div>
-      <div><b id="n3">0</b><span>qualified</span></div>
-    </div>
-
-    <div class="dash">
-      <div>
-        <div class="panel"><h2>Your friends</h2><div id="friends"></div></div>
-        <div class="panel" id="lbcard" hidden>
-          <h2 id="lbtitle">Top this month</h2>
-          <table class="board"><thead><tr><th scope="col">Rank</th><th scope="col" id="lbcol">Ambassador</th><th scope="col">Qualified</th><th scope="col">Joined</th></tr></thead><tbody id="lb"></tbody></table>
-          <p class="small muted mt-lg" id="lbme" hidden></p>
+    <!-- three views, picked by the side nav: My stats (#stats), Share kit (#share-kit), Payout (#payout) -->
+    <div data-v="stats">
+      <div class="tiles">
+        <div><b id="n0">0</b><span>link visits</span></div>
+        <div><b id="n1">0</b><span>friends joined</span></div>
+        <div><b id="n2">0</b><span>in progress</span></div>
+        <div><b id="n3">0</b><span>qualified</span></div>
+      </div>
+      <div class="dash">
+        <div>
+          <div class="panel"><h2>Your friends</h2><div id="friends"></div></div>
         </div>
-        <div class="panel">
-          <h2>How a friend counts</h2>
-          <ol class="rule">
-            <li><div><h3>New account</h3><p>Made from your link, after you joined.</p></div></li>
-            <li><div><h3 id="rule-follow">Follows you first</h3><p>Within 2 days of signing up.</p></div></li>
-            <li><div><h3><span data-shots>3</span> Daily Shots</h3><p>In their first <span data-days>week</span>. New friends show up within an hour.</p></div></li>
-          </ol>
+        <div>
+          <div class="panel" id="lbcard" hidden>
+            <h2 id="lbtitle">Top this month</h2>
+            <table class="board"><thead><tr><th scope="col">Rank</th><th scope="col" id="lbcol">Ambassador</th><th scope="col">Qualified</th><th scope="col">Joined</th></tr></thead><tbody id="lb"></tbody></table>
+            <p class="small muted mt-lg" id="lbme" hidden></p>
+          </div>
+          <div class="panel">
+            <h2>How a friend counts</h2>
+            <ol class="rule">
+              <li><div><h3>New account</h3><p>Made from your link, after you joined.</p></div></li>
+              <li><div><h3 id="rule-follow">Follows you first</h3><p>Within 2 days of signing up.</p></div></li>
+              <li><div><h3><span data-shots>3</span> Daily Shots</h3><p>In their first <span data-days>week</span>. New friends show up within an hour.</p></div></li>
+            </ol>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div>
-        <div class="panel">
-          <h2 id="linktitle">Your invite link</h2>
-          <span class="linkbox" id="link">grow.sttar.com/join/</span>
-          <div class="row"><button class="btn" id="copy" type="button">Copy</button><button class="btn-quiet" id="qrbtn" type="button" aria-expanded="false">QR code</button></div>
-          <div id="qrbox" hidden class="mt-lg">
-            <canvas id="qr" width="600" height="600" role="img" aria-label="QR code for your invite link"></canvas>
+    <div data-v="share">
+      <div class="dash">
+        <div>
+          <div class="panel">
+            <h2 id="linktitle">Your invite link</h2>
+            <span class="linkbox" id="link">grow.sttar.com/join/</span>
+            <div class="row"><button class="btn" id="copy" type="button">Copy</button><button class="btn-quiet" id="share2" type="button">Share</button></div>
+          </div>
+          <div class="panel">
+            <h2>Ready to post</h2>
+            <p class="small muted">Tap one to copy it with your link.</p>
+            <div id="kit"></div>
+          </div>
+        </div>
+        <div>
+          <div class="panel">
+            <h2>QR code</h2>
+            <p class="small muted">For in person: your floor, a chapter meeting, a party.</p>
+            <canvas id="qr" class="mt-lg" width="600" height="600" role="img" aria-label="QR code for your invite link"></canvas>
             <a class="textlink" id="qrsave" download="sttar-link.png" href="#">Save the QR code</a>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="panel" id="moneycard" hidden>
-          <h2 id="moneytitle">Earnings</h2>
-          <div class="money">
-            <div class="big"><span id="owedlabel">Owed to you</span><b id="owed">$0</b></div>
-            <div><span id="monthlabel">This month</span><b id="month">$0</b></div>
-            <div><span>All time</span><b id="earned">$0</b></div>
-            <div><span>Paid out</span><b id="paid">$0</b></div>
-          </div>
-          <div class="field mt-lg">
-            <p class="label" id="paylabel">How we pay you</p>
-            <div class="tabs paytabs" role="radiogroup" aria-labelledby="paylabel">
-              <button type="button" role="radio" id="pm-venmo" aria-checked="true" aria-selected="true">Venmo</button>
-              <button type="button" role="radio" id="pm-zelle" aria-checked="false" aria-selected="false">Zelle</button>
+    <div data-v="pay">
+      <div class="dash">
+        <div>
+          <div class="panel" id="moneycard" hidden>
+            <h2 id="moneytitle">Earnings</h2>
+            <div class="money">
+              <div class="big"><span id="owedlabel">Owed to you</span><b id="owed">$0</b></div>
+              <div><span id="monthlabel">This month</span><b id="month">$0</b></div>
+              <div><span>All time</span><b id="earned">$0</b></div>
+              <div><span>Paid out</span><b id="paid">$0</b></div>
             </div>
-            <label for="payout" id="payfor">Venmo username</label>
-            <div class="row"><input id="payout" name="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@your-venmo"><button class="btn" id="savepay" type="button">Save</button></div>
-            <span class="hint" id="payhint" role="status"></span>
+            <div class="field mt-xl">
+              <p class="label" id="paylabel">How we pay you</p>
+              <div class="tabs paytabs" role="radiogroup" aria-labelledby="paylabel">
+                <button type="button" role="radio" id="pm-venmo" aria-checked="true" aria-selected="true">Venmo</button>
+                <button type="button" role="radio" id="pm-zelle" aria-checked="false" aria-selected="false">Zelle</button>
+              </div>
+              <label for="payto" id="payfor">Venmo username</label>
+              <div class="row"><input id="payto" name="payout" type="text" maxlength="80" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@your-venmo"><button class="btn" id="savepay" type="button">Save</button></div>
+              <span class="hint" id="payhint" role="status"></span>
+            </div>
           </div>
+          <div class="empty" id="nopay" hidden><b>Earnings are off for now</b>Your friends still show up on My stats.</div>
         </div>
-
-        <div class="panel" id="share-kit">
-          <h2>Ready to post</h2>
-          <p class="small muted">Tap one to copy it with your link.</p>
-          <div id="kit"></div>
+        <div>
+          <div class="panel"><h2>How payouts work</h2><ul class="plain" id="payhow"></ul></div>
         </div>
       </div>
     </div>
@@ -135,6 +156,30 @@
   var G = window.GROW, $ = function (id) { return document.getElementById(id); };
   var q = new URLSearchParams(location.search);
   var k = q.get("k") || G.load("grow_k") || "";
+  // views: the side nav's My stats / Share kit / Payout tabs each open their own view of this page
+  var VIEWS = { "#share-kit": "share", "#payout": "pay" }, data = null;
+  var HEAD = { share: ["share kit", "Your link, a QR code and captions ready to paste."], pay: ["payout", "What you've earned and where we send it."] };
+  function view() {
+    var v = VIEWS[location.hash] || "stats";
+    $("dash").setAttribute("data-view", v);
+    if (data) {
+      var group = data.type === "group";
+      if (v === "stats") {
+        $("hello").textContent = group ? data.name : "hey " + data.name;
+        $("who").textContent = q.get("new") ? (group ? "You're in. Share your group's link to start raising." : "You're in. Share your link to get started.")
+          : (group ? "Group account @" + data.username + ", raising for " + data.cause : "Ambassador, @" + data.username);
+      } else {
+        $("hello").textContent = HEAD[v][0];
+        $("who").textContent = v === "pay" && group ? "What your group has raised and where we send it." : HEAD[v][1];
+      }
+    }
+    if (window.growNav) window.growNav();
+  }
+  function go() { view(); window.scrollTo(0, 0); }
+  window.addEventListener("hashchange", function () {
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (document.startViewTransition && !still) document.startViewTransition(go); else go();
+  });
   var show = function (id) { ["signin", "dash", "bad"].forEach(function (x) { $(x).hidden = x !== id; }); };
 
   $("form").addEventListener("submit", function (ev) {
@@ -152,29 +197,33 @@
   if (!k) { show("signin"); return; }
   $("out").addEventListener("click", function () { G.logout(); });
 
-  show("dash");
+  show("dash"); view();
   G.get({ a: "me", k: k }).then(function (d) {
     if (!d || !d.ok) { ["grow_k", "grow_name", "grow_user", "grow_type", "grow_link"].forEach(G.forget); if (window.growNav) window.growNav(); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
-    G.save("grow_k", k); G.remember(d); if (window.growNav) window.growNav();
+    G.save("grow_k", k); G.remember(d); data = d; view();
     var p = d.program, group = d.type === "group", shown = d.link.replace(/^https?:\/\//, "");
     var rate = group ? (p.groupRate || p.rate) : p.rate, cap = group ? p.groupCap : p.cap;
     G.fill(p);
 
-    $("hello").textContent = group ? d.name : "hey " + d.name;
-    $("who").textContent = q.get("new") ? (group ? "You're in. Share your group's link to start raising." : "You're in. Share your link to get started.")
-      : (group ? "Group account @" + d.username + ", raising for " + d.cause : "Ambassador, @" + d.username);
     if (group) {
       $("linktitle").textContent = "Your group's link"; $("rule-follow").textContent = "Follows @" + d.username + " first";
       $("share").textContent = "Share our link"; $("lbcol").textContent = "Group";
     }
     $("link").textContent = shown;
     $("copy").onclick = function () { G.copy(d.link, $("copy"), "Copy"); };
-    $("share").onclick = function () {
-      if (navigator.share) navigator.share({ title: "Join me on Sttar", url: d.link }).catch(function () {});
-      else G.copy(d.link, $("share"), $("share").textContent);
-    };
+    ["share", "share2"].forEach(function (id) {
+      $(id).onclick = function () {
+        if (navigator.share) navigator.share({ title: "Join me on Sttar", url: d.link }).catch(function () {});
+        else G.copy(d.link, $(id), $(id).textContent);
+      };
+    });
     $("n0").textContent = d.visits || 0; $("n1").textContent = d.signups; $("n2").textContent = d.in_progress; $("n3").textContent = d.qualified;
 
+    var how = group
+      ? ["Each friend who qualifies raises " + G.money(rate) + " for " + d.cause + ".", "We send it once a month by Venmo or Zelle.", cap > 0 ? "Up to " + G.money(cap) + " a month." : "No cap on what you can raise."]
+      : ["Each friend who qualifies adds " + G.money(rate) + ".", "We pay once a month by Venmo or Zelle.", cap > 0 ? "Up to " + G.money(cap) + " a month." : "No cap on what you can earn."];
+    how.forEach(function (t) { $("payhow").appendChild(G.el("li", "", t)); });
+    $("nopay").hidden = !!p.showEarnings;
     if (p.showEarnings) {
       $("moneycard").hidden = false;
       if (group) { $("moneytitle").textContent = "Raised for " + d.cause; $("owedlabel").textContent = "Waiting to be sent"; $("paylabel").textContent = "How we send it"; }
@@ -189,27 +238,27 @@
         method = x; var z = x === "zelle";
         [["pm-venmo", !z], ["pm-zelle", z]].forEach(function (b) { $(b[0]).setAttribute("aria-checked", String(b[1])); $(b[0]).setAttribute("aria-selected", String(b[1])); });
         $("payfor").textContent = z ? "Phone number or email on your Zelle" : "Venmo username";
-        $("payout").placeholder = z ? "(555) 123-4567 or you@email.com" : "@your-venmo";
-        $("payout").inputMode = z ? "email" : "text";
+        $("payto").placeholder = z ? "(555) 123-4567 or you@email.com" : "@your-venmo";
+        $("payto").inputMode = z ? "email" : "text";
         $("payhint").className = "hint"; $("payhint").textContent = "";
       }
-      $("pm-venmo").onclick = function () { if (method !== "venmo") { $("payout").value = ""; setMethod("venmo"); $("payout").focus(); } };
-      $("pm-zelle").onclick = function () { if (method !== "zelle") { $("payout").value = ""; setMethod("zelle"); $("payout").focus(); } };
+      $("pm-venmo").onclick = function () { if (method !== "venmo") { $("payto").value = ""; setMethod("venmo"); $("payto").focus(); } };
+      $("pm-zelle").onclick = function () { if (method !== "zelle") { $("payto").value = ""; setMethod("zelle"); $("payto").focus(); } };
       setMethod(method);
-      $("payout").value = handle;
+      $("payto").value = handle;
       if (saved) $("payhint").textContent = "We'll send it to " + (method === "zelle" ? "Zelle " : "Venmo ") + handle + ".";
       $("savepay").onclick = function () {
-        var v = $("payout").value.trim(), hint = $("payhint"), b = $("savepay"), bad = "";
+        var v = $("payto").value.trim(), hint = $("payhint"), b = $("savepay"), bad = "";
         if (method === "venmo") {
           v = v.replace(/^@+/, "");
           if (!/^[A-Za-z0-9_-]{3,30}$/.test(v)) bad = "Enter your Venmo username, like @your-venmo.";
           else v = "@" + v;
         } else if (!(/^\S+@\S+\.\S+$/.test(v) || v.replace(/\D/g, "").length >= 10)) bad = "Enter the phone number or email your Zelle uses.";
-        if (bad) { hint.className = "hint err"; hint.textContent = bad; $("payout").focus(); return; }
+        if (bad) { hint.className = "hint err"; hint.textContent = bad; $("payto").focus(); return; }
         b.disabled = true; hint.className = "hint"; hint.textContent = "";
         G.post({ a: "payout", k: k, payout: (method === "zelle" ? "Zelle " : "Venmo ") + v }).then(function (r) {
           b.disabled = false; b.textContent = r && r.ok ? "Saved" : "Retry"; setTimeout(function () { b.textContent = "Save"; }, 1600);
-          if (r && r.ok) { $("payout").value = v; hint.textContent = "We'll send it to " + (method === "zelle" ? "Zelle " : "Venmo ") + v + "."; }
+          if (r && r.ok) { $("payto").value = v; hint.textContent = "We'll send it to " + (method === "zelle" ? "Zelle " : "Venmo ") + v + "."; }
         }).catch(function () { b.disabled = false; b.textContent = "Retry"; });
       };
     }
@@ -230,17 +279,15 @@
       $("kit").appendChild(b);
     });
 
-    $("qrbtn").onclick = function () {
-      var box = $("qrbox"); box.hidden = !box.hidden; $("qrbtn").setAttribute("aria-expanded", String(!box.hidden));
-      if (box.hidden || box.dataset.done) return;
+    (function () {
       var qr = qrcode(0, "M"); qr.addData(d.link); qr.make();
       var n = qr.getModuleCount(), cv = $("qr"), cx = cv.getContext("2d"), cell = Math.floor(cv.width / (n + 8)), off = Math.floor((cv.width - cell * n) / 2);
       var css = getComputedStyle(document.documentElement);
       cx.fillStyle = css.getPropertyValue("--color-paper-2").trim() || "white"; cx.fillRect(0, 0, cv.width, cv.height);
       cx.fillStyle = css.getPropertyValue("--color-ink").trim() || "black";
       for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) cx.fillRect(off + c * cell, off + r * cell, cell, cell);
-      $("qrsave").href = cv.toDataURL("image/png"); box.dataset.done = "1";
-    };
+      $("qrsave").href = cv.toDataURL("image/png");
+    })();
 
     var box = $("friends");
     if (!d.friends.length) {
@@ -274,9 +321,6 @@
       if (d.leaderboard.rank > 5) { $("lbme").hidden = false; $("lbme").textContent = "You are number " + d.leaderboard.rank + " of " + d.leaderboard.of + " this month."; }
     }
     $("updated").textContent = G.ago(d.updated);
-    // the side nav links straight to a panel (#share-kit, #moneycard); jump there once the stats are in
-    var jump = location.hash && document.getElementById(location.hash.slice(1));
-    if (jump && !jump.hidden) jump.scrollIntoView();
   }).catch(function () { show("bad"); $("badmsg").textContent = "Could not load your stats. Check your signal and reload."; });
 })();
 </script>
