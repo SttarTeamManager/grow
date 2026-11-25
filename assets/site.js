@@ -84,8 +84,8 @@
   window.growNav = render;
 
   // the three-line button: on phones it closes the drawer; on bigger screens it folds the nav to an icon rail and back
-  // (the choice is kept in grow_side; each page's <head> applies it before the first paint)
-  function rail() { var s = G && G.load("grow_side"); root.classList.toggle("rail", !small.matches && (s ? s === "mini" : mid.matches)); label(); }
+  // (starts collapsed; the choice is kept in grow_side; each page's <head> applies it before the first paint)
+  function rail() { var s = G && G.load("grow_side"); root.classList.toggle("rail", !small.matches && s !== "full"); label(); }
   function label() {
     var b = side.querySelector(".side-toggle"); if (!b) return;
     var t = small.matches ? "Close menu" : root.classList.contains("rail") ? "Expand menu" : "Collapse menu";
