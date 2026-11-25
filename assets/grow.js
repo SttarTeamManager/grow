@@ -17,9 +17,9 @@ window.GROW = (function () {
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function forget(k) { try { localStorage.removeItem(k); } catch (e) {} }
   // who is logged in on this browser: the stats key plus the name we show in the nav
-  function me() { var k = load("grow_k"); return k ? { k: k, name: load("grow_name") || "", user: load("grow_user") || "", type: load("grow_type") || "person" } : null; }
-  function remember(d) { save("grow_name", d.name || ""); save("grow_user", d.username || ""); save("grow_type", d.type || "person"); }
-  function logout() { ["grow_k", "grow_name", "grow_user", "grow_type"].forEach(forget); location.href = "/"; }
+  function me() { var k = load("grow_k"); return k ? { k: k, name: load("grow_name") || "", user: load("grow_user") || "", type: load("grow_type") || "person", link: load("grow_link") || "" } : null; }
+  function remember(d) { save("grow_name", d.name || ""); save("grow_user", d.username || ""); save("grow_type", d.type || "person"); if (d.link) save("grow_link", d.link); }
+  function logout() { ["grow_k", "grow_name", "grow_user", "grow_type", "grow_link"].forEach(forget); location.href = "/"; }
 
   function money(n) { n = Number(n) || 0; return "$" + (n % 1 ? n.toFixed(2) : String(n)); }
   function ago(ms) {

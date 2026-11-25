@@ -107,7 +107,7 @@
           </div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="share-kit">
           <h2>Ready to post</h2>
           <p class="small muted">Tap one to copy it with your link.</p>
           <div id="kit"></div>
@@ -154,7 +154,7 @@
 
   show("dash");
   G.get({ a: "me", k: k }).then(function (d) {
-    if (!d || !d.ok) { ["grow_k", "grow_name", "grow_user", "grow_type"].forEach(G.forget); if (window.growNav) window.growNav(); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
+    if (!d || !d.ok) { ["grow_k", "grow_name", "grow_user", "grow_type", "grow_link"].forEach(G.forget); if (window.growNav) window.growNav(); show("bad"); if (d && d.error) $("badmsg").textContent = d.error; return; }
     G.save("grow_k", k); G.remember(d); if (window.growNav) window.growNav();
     var p = d.program, group = d.type === "group", shown = d.link.replace(/^https?:\/\//, "");
     var rate = group ? (p.groupRate || p.rate) : p.rate, cap = group ? p.groupCap : p.cap;
@@ -274,6 +274,9 @@
       if (d.leaderboard.rank > 5) { $("lbme").hidden = false; $("lbme").textContent = "You are number " + d.leaderboard.rank + " of " + d.leaderboard.of + " this month."; }
     }
     $("updated").textContent = G.ago(d.updated);
+    // the side nav links straight to a panel (#share-kit, #moneycard); jump there once the stats are in
+    var jump = location.hash && document.getElementById(location.hash.slice(1));
+    if (jump && !jump.hidden) jump.scrollIntoView();
   }).catch(function () { show("bad"); $("badmsg").textContent = "Could not load your stats. Check your signal and reload."; });
 })();
 </script>
