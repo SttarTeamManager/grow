@@ -82,7 +82,7 @@
     var on = $("key").type === "password"; $("key").type = on ? "text" : "password";
     $("peek").textContent = on ? "Hide" : "Show"; $("peek").setAttribute("aria-pressed", String(on));
   });
-  $("teamout").addEventListener("click", function () { G.forget("grow_team"); G.forget("grow_sheet"); location.href = "/team/"; });
+  $("teamout").addEventListener("click", function () { G.forget("grow_team"); location.href = "/team/"; });
   // a ?k= link logs you in, then the key comes out of the address bar and history
   if (new URLSearchParams(location.search).get("k") && history.replaceState) history.replaceState(null, "", "/team/");
 
@@ -90,8 +90,8 @@
     if (!k) { $("gate").hidden = false; return; }
     G.get({ a: "team", k: k }).then(function (d) {
       $("keygo").disabled = false; $("keygo").textContent = "Log in";
-      if (!d || !d.ok) { G.forget("grow_team"); G.forget("grow_sheet"); if (window.growNav) window.growNav(); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "That key did not work."; return; }
-      G.save("grow_team", k); if (d.sheet) G.save("grow_sheet", d.sheet); if (window.growNav) window.growNav();
+      if (!d || !d.ok) { G.forget("grow_team"); if (window.growNav) window.growNav(); $("page").hidden = true; $("gate").hidden = false; $("keymsg").textContent = (d && d.error) || "That key did not work."; return; }
+      G.save("grow_team", k); if (window.growNav) window.growNav();
       $("gate").hidden = true; $("page").hidden = false;
       render(d);
     }).catch(function () { $("keygo").disabled = false; $("keygo").textContent = "Log in"; $("gate").hidden = false; $("keymsg").textContent = "Could not connect. Reload to try again."; });

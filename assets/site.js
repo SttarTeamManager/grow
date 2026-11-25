@@ -20,8 +20,6 @@
     x: '<path d="M6 6l12 12M18 6 6 18"/>',
     menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
     lines: '<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
-    team: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9.5h18M9 9.5V20"/>',
-    sheet: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
     lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
   };
   function icon(n) { return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + I[n] + "</svg>"; }
@@ -51,9 +49,9 @@
     who = G && G.me();
     var program = group("the program", [tab("home", "/", "Home", "home"), tab("groups", "/groups/", "Groups", "groups"), tab("leaderboard", "/leaderboard/", "Leaderboard", "podium")]);
     var help = group("help", [tab("faq", "/faq/", "FAQ", "faq"), tab("rules", "/rules/", "Rules", "rules"), tab("", "mailto:hello@sttar.com", "Contact us", "mail"), tab("", "https://sttar.com/download", "Get the app", "phone", true)]);
-    var you, card = "", team = G && G.load("grow_team"), sheet = G && G.load("grow_sheet");
-    var admin = team ? group("admin", [tab("team", "/team/", "Team overview", "team")].concat(sheet && /^https:\/\//.test(sheet) ? [tab("", sheet, "The Sheet", "sheet", true)] : [])) : "";
-    var teamLink = team ? "" : '<a class="side-team" href="/team/" data-tip="Team login"' + (page === "team" ? ' aria-current="page"' : "") + ">" + icon("lock") + "<span>Team login</span></a>";
+    // admin stays quiet: only a browser already logged in with the team key sees one dim "Team" link at the bottom
+    var you, card = "", team = G && G.load("grow_team");
+    var teamLink = team ? '<a class="side-team" href="/team/" data-tip="Team"' + (page === "team" ? ' aria-current="page"' : "") + ">" + icon("lock") + "<span>Team</span></a>" : "";
     if (who) {
       you = group("you", [tab("me", "/me/#stats", "My stats", "stats"), tab("me-share", "/me/#share-kit", "Share kit", "send"), tab("me-pay", "/me/#payout", "Payout", "wallet")]);
       var link = who.link ? who.link.replace(/^https?:\/\//, "") : "";
@@ -72,7 +70,7 @@
     side.innerHTML =
       '<div class="side-top"><a class="side-brand" href="/" aria-label="Sttar ambassadors home">' + MARK + '<span class="side-word">Sttar</span><span class="side-tag">ambassadors</span></a>' +
         '<button class="side-toggle" type="button" aria-controls="side">' + icon("lines") + "</button></div>" +
-      '<nav class="side-nav" aria-label="Main">' + admin + (who ? you + program + help : program + you + help) + teamLink + "</nav>" + card;
+      '<nav class="side-nav" aria-label="Main">' + (who ? you + program + help : program + you + help) + teamLink + "</nav>" + card;
     label();
 
     var act = "";
@@ -127,7 +125,7 @@
   var onScroll = function () { bar.classList.toggle("scrolled", window.scrollY > 8); };
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
-  var footLinks = '<div class="footer-links"><span>Sttar Inc.</span><a href="/">Ambassadors</a><a href="/groups/">Groups</a><a href="/leaderboard/">Leaderboard</a><a href="/faq/">FAQ</a><a href="/rules/">Rules</a><a href="https://sttar.com">sttar.com</a><a href="mailto:hello@sttar.com">hello@sttar.com</a></div>';
+  var footLinks = '<div class="footer-links"><a class="foot-quiet" href="/team/">Sttar Inc.</a><a href="/">Ambassadors</a><a href="/groups/">Groups</a><a href="/leaderboard/">Leaderboard</a><a href="/faq/">FAQ</a><a href="/rules/">Rules</a><a href="https://sttar.com">sttar.com</a><a href="mailto:hello@sttar.com">hello@sttar.com</a></div>';
   var foot = document.createElement("footer");
   if (document.body.getAttribute("data-footer") === "mini") {
     foot.className = "foot-mini";

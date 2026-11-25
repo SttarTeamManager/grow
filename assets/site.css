@@ -89,7 +89,7 @@ body { padding-left: var(--side-w); }
 .side-out svg { width: 14px; height: 14px; }
 
 .side-team { position: relative; display: flex; align-items: center; gap: var(--space-xs); min-height: 32px; margin-top: calc(var(--space-xs) * -1); padding: 0 var(--space-sm); color: var(--side-dim); font-size: var(--text-xs); text-decoration: none; }
-.side-team:hover, .side-team[aria-current="page"] { color: var(--color-on-ink); }
+.side-team:hover, .side-team[aria-current="page"] { color: var(--color-on-ink-2); }
 .side-team svg { width: 14px; height: 14px; }
 
 /* page changes: the side stays put and the taped tab slides to the new page (where the browser supports it) */
@@ -100,7 +100,7 @@ body { padding-left: var(--side-w); }
 }
 ::view-transition-group(tab-on) { animation-duration: 420ms; animation-timing-function: var(--ease-out); }
 ::view-transition-group(root) { animation-duration: 220ms; }
-@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } .side-fan figure { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .side-fan figure { animation: none; } ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
 
 /* icon rail: the default on mid-size windows, or anywhere after the three-line button folds it; labels become tooltips */
 @media (min-width: 60.01rem) {
@@ -400,7 +400,8 @@ table.team tr.d td { background: var(--color-paper-3); white-space: normal; text
 .footer-links { display: flex; flex-wrap: wrap; gap: var(--space-md) var(--space-lg); margin-top: var(--space-3xl); padding-top: var(--space-lg); border-top: var(--rule-hair) solid var(--color-ink-3); font-size: var(--text-sm); }
 .footer-links a { color: var(--color-on-ink-2); text-decoration: none; }
 .footer-links a:hover { color: var(--color-on-ink); }
-.footer-links span { margin-right: auto; }
+.footer-links span, .footer-links a.foot-quiet { margin-right: auto; }
+.footer-links a.foot-quiet, .footer-links a.foot-quiet:hover { color: inherit; cursor: text; }
 .mast { display: flex; align-items: flex-start; justify-content: center; gap: 0.06em; margin-top: var(--space-xl); height: 0.62em; font-size: clamp(7rem, 25vw, 22rem); font-size: clamp(5rem, 25cqi, 22rem); overflow: hidden; line-height: 1; color: var(--color-on-ink); }
 .mast svg { width: 0.72em; height: 0.72em; margin-top: 0.1em; flex: none; }
 .mast span { font-weight: 700; letter-spacing: -0.05em; white-space: nowrap; }
